@@ -1,0 +1,45 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+@theme {
+  --font-sans: "Inter", "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-brand-red: #E11D48;
+  --color-brand-black: #0A0A0A;
+  --color-brand-dark-gray: #171717;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-black text-white font-sans antialiased;
+  }
+}
+
+.glass-morphism {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+.text-gradient-red {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-red to-red-400;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-brand-black;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-brand-dark-gray rounded-full border-2 border-brand-black hover:bg-brand-red transition-colors;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-white/5 rounded-full border-none;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full border-none hover:bg-white/30;
+}
