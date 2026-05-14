@@ -150,7 +150,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
               >
                 <div className="aspect-[16/9] w-full overflow-hidden relative bg-black/50">
                   <img 
-                    src="https://images.unsplash.com/photo-1605282721868-b7fe41d08c5c?auto=format&fit=crop&q=80&w=1000" 
+                    src="/products/media/magic-fabric.png" 
                     alt="Magic Fabric" 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
                   />
@@ -187,7 +187,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
               >
                 <div className="aspect-[16/9] w-full overflow-hidden relative bg-black/50 flex items-center justify-center">
                   <img 
-                    src="https://images.unsplash.com/photo-1596464816139-9f79e2cd33a0?auto=format&fit=crop&q=80&w=1000" 
+                    src="/products/media/p200.png" 
                     alt="P200" 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-80" 
                   />
