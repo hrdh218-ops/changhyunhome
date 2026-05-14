@@ -6,12 +6,20 @@ export interface Product {
   inkType?: 'Solvent' | 'UV' | 'Waterbase';
   uvType?: 'Roll' | 'Flatbed';
   mediaType?: 'PVC' | 'PET' | 'PP' | 'TEXTILE' | 'FLEX';
+  otherType?: 'Ink' | 'Stand' | 'Subsidiary';
   name: string;
   description: string;
   image: string;
   gallery?: string[];
   features?: { title: string; desc: string }[];
+  subModels?: string[];
+  subModelDetails?: {
+    name: string;
+    features?: { title: string; desc: string }[];
+    specs?: { label: string; value: string }[];
+  }[];
   specs?: { label: string; value: string }[];
+  notes?: string[];
 }
 
 export interface Partner {
@@ -29,6 +37,7 @@ export interface SiteSettings {
   heroSubtitle: string;
   pointColor: string;
   aboutTitle: string;
+  aboutSubtitle?: string;
   aboutVision: string;
   aboutImage: string;
   contactEmail: string;
@@ -62,7 +71,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: '17',
       category: 'System',
       inkType: 'Solvent',
-      name: 'Epson SureColor SC-S8140',
+      name: 'Epson S8140',
       description: 'PrecisionCore TFP 프린트 헤드와 UltraChrome GS3 에코 솔벤트 잉크를 풀 가동하여 뛰어난 출력 품질과 신뢰성을 제공하는 사이니지용 대형 롤 프린터입니다.',
       image: '/products/s8140.png',
       features: [
@@ -71,27 +80,25 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '강력한 하드웨어 설계', desc: '최대 1,625.6mm(64인치) 폭, 45kg 롤 타겟팅과 4.3인치 컬러 터치스크린 등 탁월한 작업 편의성을 제공합니다.' }
       ],
       specs: [
-        { label: '인쇄 방식', value: 'PrecisionCore TFP 프린트 헤드' },
+        { label: '모델명', value: 'Epson S8140' },
+        { label: '인쇄 속도', value: '최대 50㎡/h' },
+        { label: '프린트헤드', value: 'PrecisionCore TFP 프린트 헤드' },
         { label: '최대 해상도', value: '1,200 x 1,200 dpi' },
-        { label: '노즐 구성', value: '총 9,600개 (컬러 당 1,600개 노즐)' },
-        { label: '최소 잉크 분사 크기', value: '4.4pl' },
-        { label: '잉크 유형', value: '엡손 UltraChrome GS3 에코 솔벤트 잉크' },
-        { label: '색상 구성', value: 'C, M, Y, K, Lc, Lm (파우치 당 1,500ml)' },
-        { label: '인쇄 영역', value: '300 mm ~ 1,625.6 mm' },
-        { label: '미디어 처리 / 롤 사양', value: '두께 1mm 이하 / 외경 250mm / 최대 45kg' },
-        { label: '디스플레이 탑재', value: '4.3인치 컬러 LCD 터치스크린' },
-        { label: '인터페이스', value: 'Hi-Speed USB, 이더넷 1000BASE-T' },
-        { label: '기본 메모리', value: '내장 메모리 4GB' },
-        { label: '시스템 크기 (WxDxH)', value: '2,620 x 1,130 x 1,260 mm' },
-        { label: '시스템 무게', value: '약 358 kg' },
-        { label: '소비 전력', value: '사용 중 약 1,190 W' }
+        { label: '잉크타입', value: 'CMYK, Lc, Lm' },
+        { label: '최대 인쇄폭', value: '1,625.6 mm' },
+        { label: '크기', value: '2,620 x 1,130 x 1,260 mm' },
+        { label: '무게', value: '약 358 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
       ]
     },
     {
       id: '1',
       category: 'System',
       inkType: 'Solvent',
-      name: 'Epson SureColor SC-S9140',
+      name: 'Epson S9140',
       description: '사용자 교체형 프린트 헤드와 11색 잉크 시스템을 탑재하여 압도적인 색 표현력과 유지보수 편의성을 제공하는 최신 64인치 에코솔벤트 프린터입니다.',
       image: '/products/s9140.png',
       features: [
@@ -100,30 +107,48 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '컴팩트 & 로우 프로파일 디자인', desc: '기존 모델 대비 장비 높이를 낮추고 컴팩트하게 설계되어 작업자의 시야 확보 및 공간 활용도가 뛰어납니다.' }
       ],
       specs: [
-        { label: '모델명', value: 'Epson SureColor SC-S9140' },
-        { label: '최대 인쇄 폭', value: '64인치 (1,626mm)' },
-        { label: '프린트 헤드', value: 'PrecisionCore MicroTFP (사용자 교체형)' },
+        { label: '모델명', value: 'Epson S9140' },
+        { label: '인쇄 속도', value: '최대 40㎡/h' },
+        { label: '프린트헤드', value: 'PrecisionCore MicroTFP (사용자 교체형)' },
         { label: '최대 해상도', value: '1,200 x 1,200 dpi' },
-        { label: '잉크 타입', value: 'Epson UltraChrome GS3 에코솔벤트 잉크 (11색)' },
-        { label: '인쇄 속도', value: '최대 100 ㎡/h (Draft 모드)' },
-        { label: '크기 (W x D x H)', value: '2,620 x 1,004 x 1260 mm' },
+        { label: '잉크타입', value: 'CMYK, Lc, Lm, Or, R, Gr, Wh (or Cl)' },
+        { label: '최대 인쇄폭', value: '64인치 (1,626mm)' },
+        { label: '크기', value: '2,620 x 1,004 x 1,260 mm' },
         { label: '무게', value: '약 358 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
       ]
     },
     {
       id: '8',
       category: 'System',
       inkType: 'Waterbase',
-      name: 'Epson SureColor SC-P20540',
+      name: 'Epson P20540',
       description: '압도적인 인쇄 품질과 생산성을 자랑하는 64인치 대형 수성 포토 프린터입니다.',
       image: '/products/p20540.png',
+      specs: [
+        { label: '모델명', value: 'Epson P20540' },
+        { label: '인쇄 속도', value: '최대 122㎡/h' },
+        { label: '프린트헤드', value: 'PrecisionCore MicroTFP Head' },
+        { label: '최대 해상도', value: '2,400 x 1,200 dpi' },
+        { label: '잉크타입', value: 'Epson UltraChrome Pro12 잉크' },
+        { label: '최대 인쇄폭', value: '64인치 (1,624mm)' },
+        { label: '크기', value: '2,740 x 760 x 1,145 mm' },
+        { label: '무게', value: '약 224 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
+      ]
     },
     {
       id: '14',
       category: 'System',
       inkType: 'UV',
       uvType: 'Flatbed',
-      name: 'Epson SureColor SC-V4000',
+      name: 'Epson V4000',
       description: '생산성과 혁신이 결합된 10색 UV 평판 프린터로, 다양한 애플리케이션에 고품질 인쇄를 제공합니다.',
       image: '/products/v4000.png',
       features: [
@@ -132,11 +157,18 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '다목적 활용', desc: '사이니지, 판촉물, 패키징 등 다양한 두께와 재질의 평판 소재에 직접 인쇄할 수 있습니다.' }
       ],
       specs: [
-        { label: '모델명', value: 'Epson SureColor SC-V4000' },
-        { label: '프린트 헤드', value: 'PrecisionCore 프린트 헤드' },
-        { label: '잉크 타입', value: '10색 UV 잉크 (CMYK, Lc, Lm, Gray, Red, Wh, Varnish)' },
-        { label: '최대 소재 두께', value: '약 80mm (3.14인치)' },
-        { label: '특징', value: '이오나이저 내장, 멀티 존 진공 시스템' }
+        { label: '모델명', value: 'Epson V4000' },
+        { label: '인쇄 속도', value: '최대 13㎡/h' },
+        { label: '프린트헤드', value: 'Precision Core Micro TFP' },
+        { label: '최대 해상도', value: '600 x 1200 dpi' },
+        { label: '잉크타입', value: 'CMYK, Lc, Lm, Gy, R, Wh, Vr' },
+        { label: '최대 인쇄폭', value: '700 x 980 mm' },
+        { label: '크기', value: '2,097 x 1,830 x 1,470 mm' },
+        { label: '무게', value: '약620kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
       ]
     },
     {
@@ -144,7 +176,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'System',
       inkType: 'UV',
       uvType: 'Flatbed',
-      name: 'Epson SureColor SC-V7000',
+      name: 'Epson V7000',
       description: '10색 UltraChrome UV 잉크와 8개의 PrecisionCore MicroTFP 프린트 헤드를 탑재하여 포토 수준의 압도적인 화질을 구현하는 엡손의 고성능 대형 평판(Flatbed) 프린터입니다.',
       image: '/products/v7000.png',
       features: [
@@ -153,19 +185,18 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '정밀한 출력 시스템', desc: 'PrecisionCore MicroTFP 헤드를 8개 탑재하여 최대 720 x 1440 dpi의 고해상도 품질을 보장합니다.' }
       ],
       specs: [
-        { label: '인쇄 방식', value: 'PrecisionCore MicroTFP x 8' },
+        { label: '모델명', value: 'Epson V7000' },
+        { label: '인쇄 속도', value: '최대 40㎡/h' },
+        { label: '프린트헤드', value: 'PrecisionCore MicroTFP x 8' },
         { label: '최대 해상도', value: '720 x 1440 dpi' },
-        { label: '노즐 구성', value: '1,440 노즐 (360/컬러) *헤드 개당' },
-        { label: '최소 잉크 분사 크기', value: '3.5 pl' },
-        { label: '잉크 유형', value: 'Epson UltraChrome UV ink' },
-        { label: '색상 구성', value: 'Bk, C, M, Y, Lc, Lm, Gy, R, Wh, Vr (색당 1,000ml)' },
-        { label: '출력폭 (인쇄 가능 영역)', value: '최대 2,500 x 1,250 mm' },
-        { label: '미디어 처리', value: '두께 최대 80mm / 무게 50kg/㎡' },
-        { label: '시스템 크기 (WxDxH)', value: '4,635 x 2,768 x 1,730 mm' },
-        { label: '시스템 무게', value: '약 1,370 kg' },
-        { label: '동작 온도', value: '15 - 30℃ (20 - 32℃ 권장)' },
-        { label: '소비 전력', value: '5.7 kVA' },
-        { label: '정격 전압', value: 'AC 200, 208, 220, 230, 240V (50/60Hz, 29A)' }
+        { label: '잉크타입', value: 'Epson UltraChrome UV ink' },
+        { label: '최대 인쇄폭', value: '2,500 x 1,250 mm' },
+        { label: '크기', value: '4,635 x 2,768 x 1,730 mm' },
+        { label: '무게', value: '약 1,370 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
       ]
     },
     {
@@ -181,11 +212,6 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         '/products/media/pvc/3.png',
         '/products/media/pvc/4.png',
         '/products/media/pvc/5.png',
-        '/products/media/pvc/6.png',
-        '/products/media/pvc/7.png',
-        '/products/media/pvc/8.png',
-        '/products/media/pvc/9.png',
-        '/products/media/pvc/10.png',
       ]
     },
     {
@@ -201,18 +227,13 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         '/products/media/pet/3.png',
         '/products/media/pet/4.png',
         '/products/media/pet/5.png',
-        '/products/media/pet/6.png',
-        '/products/media/pet/7.png',
-        '/products/media/pet/8.png',
-        '/products/media/pet/9.png',
-        '/products/media/pet/10.png',
       ]
     },
     {
       id: '2',
       category: 'Media',
       mediaType: 'PP',
-      name: 'PP (프리미엄 합성지)',
+      name: 'PP (합성지)',
       description: '우수한 발색력과 내구성을 갖춘 고품질 합성지로, 실내외 다양한 배너 및 광고물에 적합합니다.',
       image: '/products/media/pp/main.png',
       gallery: [
@@ -221,11 +242,6 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         '/products/media/pp/3.png',
         '/products/media/pp/4.png',
         '/products/media/pp/5.png',
-        '/products/media/pp/6.png',
-        '/products/media/pp/7.png',
-        '/products/media/pp/8.png',
-        '/products/media/pp/9.png',
-        '/products/media/pp/10.png',
       ]
     },
     {
@@ -241,11 +257,6 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         '/products/media/textile/3.png',
         '/products/media/textile/4.png',
         '/products/media/textile/5.png',
-        '/products/media/textile/6.png',
-        '/products/media/textile/7.png',
-        '/products/media/textile/8.png',
-        '/products/media/textile/9.png',
-        '/products/media/textile/10.png',
       ]
     },
     {
@@ -261,97 +272,117 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         '/products/media/flex/3.png',
         '/products/media/flex/4.png',
         '/products/media/flex/5.png',
-        '/products/media/flex/6.png',
-        '/products/media/flex/7.png',
-        '/products/media/flex/8.png',
-        '/products/media/flex/9.png',
-        '/products/media/flex/10.png',
       ]
     },
     {
-      id: '3',
+      id: 'ink-waterbase',
       category: 'Others',
-      name: 'Epson UltraChrome GS3 Ink',
-      description: '빠른 건조 시간과 탁월한 내광성을 제공하는 친환경 에코솔벤트 잉크입니다.',
-      image: 'https://picsum.photos/seed/ink1/800/600',
+      otherType: 'Ink',
+      name: '수성 잉크',
+      description: '수성 잉크',
+      image: '/products/ink-waterbase.png',
     },
     {
-      id: '4',
-      category: 'System',
-      inkType: 'Solvent',
-      name: 'Roland DGXPRESS ER-642',
-      description: '뛰어난 생산성, 높은 인쇄 품질 및 경쟁력 있는 가격을 제공하는 고성능 64인치 에코솔벤트 프린터입니다.',
-      image: '/products/er642.png',
-      features: [
-        { title: '고속 및 고품질 인쇄', desc: '듀얼 스태거드 프린트 헤드와 향상된 Roland Intelligent Pass Control을 통해 고속 출력 시에도 밴딩을 최소화하고 매끄러운 품질을 유지합니다.' },
-        { title: '새로운 D-EA2 잉크', desc: '고성능 에코솔벤트 잉크로 선명한 색상과 뛰어난 내구성을 제공하며 경제적인 인쇄가 가능합니다.' },
-        { title: '최신 소프트웨어 지원', desc: '다기능 RIP Suite인 VersaWorks 7과 기기 상태를 모니터링하는 Roland DG Connect 앱을 지원하여 작업 효율성을 극대화합니다.' }
-      ],
-      specs: [
-        { label: '모델명', value: 'Roland DGXPRESS ER-642' },
-        { label: '최대 인쇄 폭', value: '64인치 (1,625mm)' },
-        { label: '프린트 헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
-        { label: '최대 해상도', value: '1,200 dpi' },
-        { label: '잉크 타입', value: 'D-EA2 에코솔벤트 잉크' },
-        { label: '소프트웨어', value: 'VersaWorks 7 RIP' },
-        { label: '크기 (W x D x H)', value: '2,819 x 736 x 1,316 mm' },
-        { label: '무게', value: '약 190 kg' }
+      id: 'ink-solvent',
+      category: 'Others',
+      otherType: 'Ink',
+      name: '솔벤 잉크',
+      description: '솔벤 잉크',
+      image: '/products/ink-solvent.png',
+    },
+    {
+      id: 'ink-uv',
+      category: 'Others',
+      otherType: 'Ink',
+      name: 'UV 잉크',
+      description: 'UV 잉크',
+      image: '/products/ink-uv.png',
+    },
+    {
+      id: 'sub-eyelet',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '아일렛',
+      description: '아일렛',
+      image: '/products/eyelet.png',
+    },
+    {
+      id: 'sub-triangle-hook',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '삼각 점착고리',
+      description: '삼각 점착고리',
+      image: '/products/triangle-hook.png',
+    },
+    {
+      id: 'sub-flat-string',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '납작끈',
+      description: '납작끈',
+      image: '/products/flat-string.png',
+    },
+    {
+      id: 'sub-pp-rope',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: 'PP로프',
+      description: 'PP로프',
+      image: '/products/pp-rope.png',
+    },
+    {
+      id: 'sub-suction',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '큐방',
+      description: '큐방',
+      image: '/products/suction-cup.png',
+    },
+    {
+      id: 'sub-cutting-iron',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '재단 인두기',
+      description: '재단 인두기',
+      image: '/products/cutting-iron.png',
+    },
+    {
+      id: 'sub-instant-iron',
+      category: 'Others',
+      otherType: 'Subsidiary',
+      name: '즉열 인두기',
+      description: '즉열 인두기',
+      image: '/products/instant-iron.png',
+    },
+    {
+      id: 'stand-indoor',
+      category: 'Others',
+      otherType: 'Stand',
+      name: '실내용 거치대',
+      description: '실내용 거치대',
+      image: '/products/stand-indoor-main.png',
+      gallery: [
+        '/products/stand-indoor-1.png',
+        '/products/stand-indoor-2.png'
       ]
     },
     {
-      id: '5',
-      category: 'System',
-      inkType: 'UV',
-      uvType: 'Roll',
-      name: 'Roland TrueVIS LG-642',
-      description: '새로운 차원의 시각적 효과를 제공하는 고생산성 64인치 UV-LED 프린터 및 커터입니다. 백색, 광택(Clear) 잉크를 활용한 특수 인쇄가 가능합니다.',
-      image: '/products/lg642.png',
-      features: [
-        { title: '고해상도 UV-LED 인쇄', desc: '열에 민감한 소재에도 출력 가능한 저발열 UV-LED 램프와 고밀도 잉크로 선명한 품질을 제공합니다.' },
-        { title: '통합 프린트 & 컷 기능', desc: '인쇄 후 윤곽선 커팅까지 한 번의 공정으로 처리하여 작업 시간을 단축하고 효율성을 극대화합니다.' },
-        { title: '특수 효과 인쇄', desc: '클리어(광택) 잉크와 화이트 잉크를 사용하여 엠보싱, 바니시 등 다양한 질감과 텍스처를 표현할 수 있습니다.' }
-      ],
-      specs: [
-        { label: '모델명', value: 'Roland TrueVIS LG-642' },
-        { label: '최대 인쇄 폭', value: '64인치 (1,625mm)' },
-        { label: '프린트 헤드', value: '스태거드 배열 피에조 잉크젯 헤드' },
-        { label: '최대 해상도', value: '1,200 dpi' },
-        { label: '잉크 타입', value: 'EUV5 UV-LED 잉크 (CMYK, Wh, Gl, Re, Or)' },
-        { label: '커팅 속도', value: '최대 300 mm/s' },
-        { label: '크기 (W x D x H)', value: '2,819 x 748 x 1,316 mm' },
-        { label: '무게', value: '약 205 kg' }
-      ]
-    },
-    {
-      id: '6',
-      category: 'System',
-      inkType: 'UV',
-      uvType: 'Roll',
-      name: 'Roland DGXPRESS UG-642',
-      description: '전 세계적으로 신뢰받는 브랜드가 구축한 믿을 수 있는 UV 프린트 & 커터 솔루션을 사용하여 다양한 인쇄 제품을 빠른 속도와 저렴한 비용으로 생산하세요.',
-      image: '/products/ug642.png',
-      features: [
-        { title: '최고의 생산성', desc: '고성능 프린트 헤드와 최적화된 인쇄 기술로 다양한 인쇄물을 빠르고 효율적으로 생산할 수 있습니다.' },
-        { title: '특수 효과를 통한 뛰어난 인쇄 효과', desc: '클리어(광택) 및 화이트 잉크를 활용하여 엠보싱, 바니시 등 독특한 질감과 프리미엄 특수 효과를 구현합니다.' },
-        { title: '최신 소프트웨어 지원', desc: '다기능 RIP Suite인 VersaWorks 7과 기기 상태를 모니터링하는 Roland DG Connect 앱을 지원하여 작업 효율성을 극대화합니다.' }
-      ],
-      specs: [
-        { label: '모델명', value: 'Roland DGXPRESS UG-642' },
-        { label: '최대 인쇄 폭', value: '64인치 (1,625mm)' },
-        { label: '프린트 헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
-        { label: '최대 해상도', value: '1,200 dpi' },
-        { label: '잉크 타입', value: '고성능 UV 잉크 (CMYK, Wh, Gl)' },
-        { label: '소프트웨어', value: 'VersaWorks 7 RIP' },
-        { label: '커팅 속도', value: '최대 300 mm/s' },
-        { label: '크기 (W x D x H)', value: '2,819 x 736 x 1,316 mm' },
-        { label: '무게', value: '약 195 kg' }
+      id: 'stand-outdoor',
+      category: 'Others',
+      otherType: 'Stand',
+      name: '실외용 거치대',
+      description: '실외용 거치대',
+      image: '/products/stand-outdoor-main.png',
+      gallery: [
+        '/products/stand-outdoor-1.png',
+        '/products/stand-outdoor-2.png'
       ]
     },
     {
       id: '7',
       category: 'System',
       inkType: 'Waterbase',
-      name: 'Roland DGXPRESS ER-642 (Waterbase)',
+      name: 'ROLAND ER-642 WATERBASE',
       description: '뛰어난 생산성, 높은 인쇄 품질 및 경쟁력 있는 가격을 제공하는 고성능 64인치 수성 프린터입니다.',
       image: '/products/er642.png',
       features: [
@@ -360,14 +391,117 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '최신 소프트웨어 지원', desc: '다기능 RIP Suite인 VersaWorks 7과 기기 상태를 모니터링하는 Roland DG Connect 앱을 지원하여 작업 효율성을 극대화합니다.' }
       ],
       specs: [
-        { label: '모델명', value: 'Roland DGXPRESS ER-642 (Waterbase)' },
-        { label: '최대 인쇄 폭', value: '64인치 (1,625mm)' },
-        { label: '프린트 헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
+        { label: '모델명', value: 'ROLAND ER-642 WATERBASE' },
+        { label: '인쇄 속도', value: '최대 40㎡/h' },
+        { label: '프린트헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
         { label: '최대 해상도', value: '1,200 dpi' },
-        { label: '잉크 타입', value: '수성 잉크' },
-        { label: '소프트웨어', value: 'VersaWorks 7 RIP' },
-        { label: '크기 (W x D x H)', value: '2,819 x 736 x 1,316 mm' },
+        { label: '잉크타입', value: 'CMYK, CMYK' },
+        { label: '최대 인쇄폭', value: '64인치 (1,625mm)' },
+        { label: '크기', value: '2,819 x 736 x 1,316 mm' },
         { label: '무게', value: '약 190 kg' }
+      ],
+      notes: [
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
+      ]
+    },
+    {
+      id: '4',
+      category: 'System',
+      inkType: 'Solvent',
+      name: 'ROLAND ER-642 SOLVENT',
+      description: '뛰어난 생산성, 높은 인쇄 품질 및 경쟁력 있는 가격을 제공하는 고성능 64인치 에코솔벤트 프린터입니다.',
+      image: '/products/er642.png',
+      features: [
+        { title: '고속 및 고품질 인쇄', desc: '듀얼 스태거드 프린트 헤드와 향상된 Roland Intelligent Pass Control을 통해 고속 출력 시에도 밴딩을 최소화하고 매끄러운 품질을 유지합니다.' },
+        { title: '새로운 D-EA2 잉크', desc: '고성능 에코솔벤트 잉크로 선명한 색상과 뛰어난 내구성을 제공하며 경제적인 인쇄가 가능합니다.' },
+        { title: '최신 소프트웨어 지원', desc: '다기능 RIP Suite인 VersaWorks 7과 기기 상태를 모니터링하는 Roland DG Connect 앱을 지원하여 작업 효율성을 극대화합니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'ROLAND ER-642 SOLVENT' },
+        { label: '인쇄 속도', value: '최대 40㎡/h' },
+        { label: '프린트헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
+        { label: '최대 해상도', value: '1,200 dpi' },
+        { label: '잉크타입', value: 'CMYK, CMYK' },
+        { label: '최대 인쇄폭', value: '64인치 (1,625mm)' },
+        { label: '크기', value: '2,819 x 736 x 1,316 mm' },
+        { label: '무게', value: '약 190 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 1년입니다. (헤드포함)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
+      ]
+    },
+    {
+      id: '6',
+      category: 'System',
+      inkType: 'UV',
+      uvType: 'Roll',
+      name: 'ROLAND UG-642 UV',
+      description: '전 세계적으로 신뢰받는 브랜드가 구축한 믿을 수 있는 UV 프린트 & 커터 솔루션을 사용하여 다양한 인쇄 제품을 빠른 속도와 저렴한 비용으로 생산하세요.',
+      image: '/products/ug642.png',
+      features: [
+        { title: '최고의 생산성', desc: '고성능 프린트 헤드와 최적화된 인쇄 기술로 다양한 인쇄물을 빠르고 효율적으로 생산할 수 있습니다.' },
+        { title: '특수 효과를 통한 뛰어난 인쇄 효과', desc: '클리어(광택) 및 화이트 잉크를 활용하여 엠보싱, 바니시 등 독특한 질감과 프리미엄 특수 효과를 구현합니다.' },
+        { title: '최신 소프트웨어 지원', desc: '다기능 RIP Suite인 VersaWorks 7과 기기 상태를 모니터링하는 Roland DG Connect 앱을 지원하여 작업 효율성을 극대화합니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'ROLAND UG-642 UV' },
+        { label: '인쇄 속도', value: '최대 20㎡/h' },
+        { label: '프린트헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
+        { label: '최대 해상도', value: '1,200 dpi' },
+        { label: '잉크타입', value: 'CMYK, Wh, Wh, Vr, Vr' },
+        { label: '최대 인쇄폭', value: '64인치 (1,625mm)' },
+        { label: '크기', value: '2,819 x 736 x 1,316 mm' },
+        { label: '무게', value: '약 195 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 2년입니다. (헤드 2개)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
+      ]
+    },
+    {
+      id: '5',
+      category: 'System',
+      inkType: 'UV',
+      uvType: 'Roll',
+      name: 'ROLAND LG-640 UV',
+      description: '새로운 차원의 시각적 효과를 제공하는 고생산성 64인치 UV-LED 프린터 및 커터입니다. 백색, 광택(Clear) 잉크를 활용한 특수 인쇄가 가능합니다.',
+      image: '/products/lg642.png',
+      features: [
+        { title: '고해상도 UV-LED 인쇄', desc: '열에 민감한 소재에도 출력 가능한 저발열 UV-LED 램프와 고밀도 잉크로 선명한 품질을 제공합니다.' },
+        { title: '통합 프린트 & 컷 기능', desc: '인쇄 후 윤곽선 커팅까지 한 번의 공정으로 처리하여 작업 시간을 단축하고 효율성을 극대화합니다.' },
+        { title: '특수 효과 인쇄', desc: '클리어(광택) 잉크와 화이트 잉크를 사용하여 엠보싱, 바니시 등 다양한 질감과 텍스처를 표현할 수 있습니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'ROLAND LG-640 UV' },
+        { label: '인쇄 속도', value: '최대 12㎡/h' },
+        { label: '프린트헤드', value: '스태거드 배열 피에조 잉크젯 헤드' },
+        { label: '최대 해상도', value: '1,200 dpi' },
+        { label: '잉크타입', value: 'CMYK, Or, R, Wh, Vr' },
+        { label: '최대 인쇄폭', value: '64인치 (1,625mm)' },
+        { label: '크기', value: '2,819 x 748 x 1,316 mm' },
+        { label: '무게', value: '약 205 kg' }
+      ],
+      notes: [
+        '무상 A/S 기간은 2년입니다. (헤드 2개)',
+        '출력 환경에 따라 인쇄 속도는 변경될 수 있습니다.'
+      ]
+    },
+    {
+      id: 'psw-1800',
+      category: 'System',
+      name: 'PSW-1800',
+      description: '2헤드부터 4헤드까지 작업 환경에 맞춘 유연한 구성으로 생산성을 극대화하고, 1800mm 미디어까지 지원하는 수성 롤 타입 프린터입니다.',
+      image: '/products/psw-1800.png',
+      specs: [
+        { label: '모델명', value: 'PSW-1800' },
+        { label: '인쇄 속도', value: '최대 145㎡/h' },
+        { label: '프린트헤드', value: 'EPSON i3200' },
+        { label: '최대 해상도', value: '2400dpi' },
+        { label: '잉크타입', value: 'CMYK' },
+        { label: '최대 인쇄폭', value: '1,800mm' },
+        { label: '크기', value: '3,220 x 1,475 x 720 mm' },
+        { label: '무게', value: '400kg' }
       ]
     },
     {
@@ -375,16 +509,26 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'System',
       inkType: 'UV',
       uvType: 'Roll',
-      name: 'JAEHYUN XTRA R32 ECO',
+      name: 'XTRA R32 ECO',
       description: '뛰어난 내구성과 고품질 출력을 지원하는 3.2m 대형 UV 롤투롤 프린터입니다.',
       image: '/products/xtra-r32.png',
+      specs: [
+        { label: '모델명', value: 'XTRA R32 ECO' },
+        { label: '인쇄 속도', value: '최대 36㎡/h' },
+        { label: '프린트헤드', value: 'EPSON T3200 HEAD' },
+        { label: '최대 해상도', value: '최대 705 × 2,400 dpi' },
+        { label: '잉크타입', value: 'CMYK, Lc, Lm (옵션), Wh (옵션), Vr (옵션)' },
+        { label: '최대 인쇄폭', value: '3,200mm' },
+        { label: '크기', value: '4,728 x 1,400 x 850 mm' },
+        { label: '무게', value: '709kg' }
+      ]
     },
     {
       id: '12',
       category: 'System',
       inkType: 'UV',
       uvType: 'Roll',
-      name: 'JAEHYUN XTRA 3300S',
+      name: 'XTRA 3300S',
       description: '신개념 산업용 UV LED 롤투롤 프린터. 산업용 프린트 헤드를 탑재하여 압도적인 생산성을 제공하는 하이엔드 UV 롤투롤 장비입니다.',
       image: '/products/xtra-3300s.png',
       features: [
@@ -394,6 +538,16 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '듀얼 AC 서보 모터', desc: '피딩 시스템에 적용된 듀얼 AC 서보 모터 및 이중 무브먼트 모드는 다양한 소재의 공급을 정확하고 원활하게 구현합니다.' },
         { title: '적외선 세이프 가드', desc: '적외선 세이프 가드는 테이크업 및 피딩 시스템의 장애물을 감지하여 위험으로부터 작업자를 보호합니다.' },
         { title: '대용량 소재 로딩', desc: '최대 360kg의 소재 로딩이 가능하며, 수직으로 구동되는 텐션 롤러는 소재의 장착과 교환이 쉽게 이루어집니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'XTRA 3300S' },
+        { label: '인쇄 속도', value: '최대 100㎡/h' },
+        { label: '프린트헤드', value: 'Konica Minolta Head' },
+        { label: '최대 해상도', value: '720 x 1440 dpi' },
+        { label: '잉크타입', value: 'CMYK, Lc, Lm' },
+        { label: '최대 인쇄폭', value: '3,300mm' },
+        { label: '크기', value: '5,800 x 1,600 x 930 mm' },
+        { label: '무게', value: '2,200kg' }
       ]
     },
     {
@@ -401,7 +555,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'System',
       inkType: 'UV',
       uvType: 'Roll',
-      name: 'JAEHYUN XTRA 3300H',
+      name: 'XTRA 3300H',
       description: '하이브리드 타입의 UV 프린터로 간단히 롤 출력 또는 평판 출력 모드를 바꿀 수 있는 최적의 제품입니다.',
       image: '/products/xtra-3300h.png',
       features: [
@@ -411,6 +565,16 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '자동 높이 측정', desc: '최대 5.1cm의 다양한 두께의 소재에 출력이 가능하며, 소재 높이를 자동 측정하는 시스템이 장착되어 있습니다.' },
         { title: '벨트 틀어짐 자동 조절', desc: '벨트 틀어짐 자동 조절 시스템은 소재의 틀어짐을 방지하며 출력 품질을 보장합니다.' },
         { title: '산업용 테이크업/피딩', desc: '산업용 테이크업 및 피딩시스템은 소재 로딩을 자유롭게 조절하며, 원단의 구겨짐을 방지합니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'XTRA 3300H' },
+        { label: '인쇄 속도', value: '최대 99㎡/h' },
+        { label: '프린트헤드', value: 'EPSON T3200 HEAD' },
+        { label: '최대 해상도', value: '705 x 2400 dpi' },
+        { label: '잉크타입', value: '4, 6, 8색, Wh (옵션), Vr (옵션)' },
+        { label: '최대 인쇄폭', value: '3,300mm' },
+        { label: '크기', value: '6,000 x 1,550 x 1,600 mm' },
+        { label: '무게', value: '3,000kg' }
       ]
     },
     {
@@ -418,15 +582,91 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'System',
       inkType: 'UV',
       uvType: 'Flatbed',
-      name: 'JAEHYUN JU 시리즈',
+      name: 'JU SERIES',
       description: '산업용 환경에 최적화된 견고한 설계와 고속 출력을 지원하는 UV 평판 프린터 라인업입니다.',
       image: '/products/ju-series-1.png',
       gallery: ['/products/ju-series-2.png', '/products/ju-series-3.png'],
+      subModels: ['JU-9060', 'JU-1810', 'JU-2513'],
+      subModelDetails: [
+        {
+          name: 'JU-9060',
+          features: [
+            { title: '산업용 헤드 적용', desc: 'RICOH GEN5i 또는 EPSON i3200 산업용 헤드 적용하여 높은 인쇄 품질을 구현합니다.' },
+            { title: '고성능 UV-LED 경화 램프', desc: '고성능 UV-LED 경화 램프로 다양한 소재에 출력이 가능합니다.' },
+            { title: '바니시 장착 가능', desc: '헤드에 바니시 장착이 가능하여 보다 다양한 활용성을 제공합니다.' },
+            { title: '자동 높이 측정', desc: '출력 소재 높이를 자동으로 측정하여 최적의 상태로 출력합니다.' },
+            { title: '충돌 방지 센서', desc: '충돌 방지 센서가 장착되어 있어 물리적 충격으로부터 프린트 헤드를 안전하게 보호합니다.' },
+            { title: '네거티브 차압 시스템', desc: '네거티브 차압 시스템을 적용하여 안정적인 잉크 공급과 고품질 출력을 보장합니다.' }
+          ],
+          specs: [
+            { label: '모델명', value: 'JU-9060' },
+            { label: '인쇄 속도', value: '최대 7.5㎡/h' },
+            { label: '프린트헤드', value: 'RICOH GEN5i 또는 EPSON i3200' },
+            { label: '최대 해상도', value: '720 x 1200 dpi' },
+            { label: '잉크타입', value: 'CMYK, Wh, Vr' },
+            { label: '최대 인쇄폭', value: '900mm x 600mm' },
+            { label: '크기', value: '2,350 x 1,175 x 1,200 mm' },
+            { label: '무게', value: '450kg' }
+          ]
+        },
+        {
+          name: 'JU-1810',
+          features: [
+            { title: '가로 방향 최적화 설계', desc: '가로 방향이 긴 형태로 (1,800mm) 출력 속도와 공간 활용성을 극대화했습니다.' },
+            { title: '산업용 헤드 적용', desc: 'RICOH사의 GEN6 산업용 헤드 적용하여 높은 인쇄 품질을 구현합니다.' },
+            { title: '고성능 UV-LED 경화 램프', desc: '고성능 UV-LED 경화 램프로 다양한 소재에 출력이 가능합니다.' },
+            { title: '프라이머 장착 가능', desc: '헤드에 프라이머 장착이 가능하여 전처리 공정이 불필요합니다. (CMYK + W + P)' },
+            { title: '자동 높이 측정', desc: '출력 소재 높이를 자동으로 측정하여 최적의 상태로 출력합니다.' },
+            { title: '충돌 방지 센서', desc: '충돌 방지 센서가 장착되어 있어 물리적 충격으로부터 프린트 헤드를 안전하게 보호합니다.' },
+            { title: '네거티브 차압 시스템', desc: '네거티브 차압 시스템을 적용하여 안정적인 잉크 공급과 고품질 출력을 보장합니다.' }
+          ],
+          specs: [
+            { label: '모델명', value: 'JU-1810' },
+            { label: '인쇄 속도', value: '최대 14㎡/h' },
+            { label: '프린트헤드', value: 'RICOH GEN 6 HEAD' },
+            { label: '최대 해상도', value: '720 x 1200 dpi' },
+            { label: '잉크타입', value: 'CMYK, Lc, Lm, W, Pr' },
+            { label: '최대 인쇄폭', value: '1,800 x 1,000 mm' },
+            { label: '크기', value: '3,650 × 1,650 × 1,510 mm' },
+            { label: '무게', value: '580kg' }
+          ]
+        },
+        {
+          name: 'JU-2513',
+          features: [
+            { title: '산업용 헤드 적용', desc: 'RICOH사의 GEN6 산업용 헤드 적용하여 높은 인쇄 품질을 구현합니다.' },
+            { title: '고성능 UV-LED 경화 램프', desc: '고성능 UV-LED 경화 램프로 다양한 소재에 출력이 가능합니다.' },
+            { title: '프라이머 장착 가능', desc: '헤드에 프라이머 장착이 가능하여 전처리 공정이 불필요합니다. (CMYK + W + P)' },
+            { title: '자동 높이 측정', desc: '출력 소재 높이를 자동으로 측정하여 최적의 상태로 출력합니다.' },
+            { title: '충돌 방지 센서', desc: '충돌 방지 센서가 장착되어 있어 물리적 충격으로부터 프린트 헤드를 안전하게 보호합니다.' },
+            { title: '네거티브 차압 시스템', desc: '네거티브 차압 시스템을 적용하여 안정적인 잉크 공급과 고품질 출력을 보장합니다.' }
+          ],
+          specs: [
+            { label: '모델명', value: 'JU-2513' },
+            { label: '인쇄 속도', value: '최대 45㎡/h' },
+            { label: '프린트헤드', value: 'RICOH GEN 6 HEAD' },
+            { label: '최대 해상도', value: '1200 x 1200 dpi' },
+            { label: '잉크타입', value: 'CMYK, Lc, Lm, W, Pr' },
+            { label: '최대 인쇄폭', value: '2,500mm × 1,300mm' },
+            { label: '크기', value: '4,100 × 2,000 × 1,350mm' },
+            { label: '무게', value: '1350kg' }
+          ]
+        }
+      ],
+      specs: [
+        { label: '모델명', value: 'JU SERIES' },
+        { label: '인쇄 속도', value: '' },
+        { label: '프린트헤드', value: '' },
+        { label: '최대 해상도', value: '' },
+        { label: '잉크타입', value: 'CMYK, Lc, Lm' },
+        { label: '크기', value: '' },
+        { label: '무게', value: '' }
+      ]
     },
     {
       id: '19',
       category: 'System',
-      name: 'JAEHYUN MULTI CUT SG',
+      name: 'MULTI CUT SG',
       description: '고속 정밀 커팅과 강력한 내구성을 자랑하는 차세대 플래그십 디지털 멀티 평판 커팅기입니다. 다양한 산업용 소재와 대량 생산에 특화된 최고급형 모델입니다.',
       image: '/products/multi-cut-sg.png',
       features: [
@@ -435,20 +675,19 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '다양한 사이즈 라인업 및 컨베이어 결합', desc: '최소 1.6m부터 3.2m 폭까지 무한대 길이(컨베이어 시스템 탑재 시)를 커버하는 폭넓은 사이즈 라인업을 보장합니다.' }
       ],
       specs: [
-        { label: '기준 모델명', value: 'SG-2516' },
-        { label: '구동 시스템', value: '디지털 서보 모터, 헬리컬 기어, 직선 레일, 가이드 스크류' },
-        { label: '이동 및 커팅 속도', value: '이동 및 커팅 최대 2,000mm/s' },
-        { label: '최대 커팅 두께', value: '최대 50mm' },
+        { label: '모델명', value: 'MULTI CUT SG' },
+        { label: '커팅 속도', value: '최대 2,000mm/s' },
+        { label: '구동시스템', value: '디지털 서보 모터, 헬리컬 기어, 직선 레일, 가이드 스크류' },
         { label: '반복 정밀도', value: '±0.05 mm' },
-        { label: '시스템 크기 및 무게', value: '2,570 x 3,380 x 1,415mm / 1,100kg (2516 기준)' },
-        { label: '전기 사양 및 소비 전력', value: '380V 또는 220V±10% (50/60Hz) / 13kW' },
-        { label: '통신 인터페이스', value: '이더넷 (Ethernet)' }
+        { label: '최대 소재 두께', value: '50mm' },
+        { label: '최대 커팅 크기', value: '최대 3.2m' },
+        { label: '크기', value: '2,570 x 3,380 x 1,415 mm' }
       ]
     },
     {
       id: '20',
       category: 'System',
-      name: 'JAEHYUN MULTI CUT JP',
+      name: 'MULTI CUT JP',
       description: '합리적인 가격과 고스펙을 동시에 만족시키는 다목적 전문가용 평판 커팅기입니다. 탁월한 공간 활용과 다양한 툴 지원으로 소규모부터 대형 장비까지 맞춤 세팅이 가능합니다.',
       image: '/products/multi-cut-jp.png',
       features: [
@@ -457,21 +696,19 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '스마트 제어', desc: '립(RIP) 소프트웨어 완벽 호환, 바코드/QR 리딩 시스템, 터치 스크린 LCD 조작, 커팅 경로 최적화 등으로 사용 편의성을 극대화했습니다.' }
       ],
       specs: [
-        { label: '기준 모델명', value: 'JP-2516' },
-        { label: '구동 시스템', value: '디지털 서보 모터, 직선 레일, 동기화 벨트, 가이드 스크류' },
-        { label: '최대 커팅 영역', value: '1,600 x 2,500 mm (컨베이어 방식으로 길이 무한대)' },
-        { label: '최대 커팅 두께', value: '최대 50 mm' },
-        { label: '이동 및 커팅 속도', value: '이동 최대 1,500mm/s / 커팅 최대 1,200mm/s' },
+        { label: '모델명', value: 'MULTI CUT JP' },
+        { label: '커팅 속도', value: '최대 1,200mm/s' },
+        { label: '구동시스템', value: '디지털 서보 모터, 직선 레일, 동기화 벨트, 가이드 스크류' },
         { label: '반복 정밀도', value: '±0.05 mm' },
-        { label: '시스템 크기 (WxDxH)', value: '2,620 x 3,650 x 1,280 mm' },
-        { label: '사용 인터페이스', value: '한글화 LCD 터치 스크린' },
-        { label: '전기 사양 및 소비 전력', value: '380V 또는 220V±10% (50/60Hz) / 9.5 kW' }
+        { label: '최대 소재 두께', value: '50mm' },
+        { label: '최대 커팅 크기', value: '1,600 x 2,500 mm' },
+        { label: '크기', value: '2,620 x 3,650 x 1,280 mm' }
       ]
     },
     {
       id: '21',
       category: 'System',
-      name: 'JAEHYUN MULTI CUT JC',
+      name: 'MULTI CUT JC',
       description: '일관된 절단 품질, 원활한 재료 처리 및 손쉬운 작동을 제공하도록 설계된 엔트리급 컨베이어 평판 커팅 솔루션입니다. 광고, 포장, 의류 등 다양한 산업 분야에 최적화되어 있습니다.',
       image: '/products/multi-cut-jc.png',
       features: [
@@ -480,15 +717,13 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { title: '스마트 & 안전 작업 환경', desc: 'CCD 카메라 마크 리딩, 자동 툴 높이 측정, 진공판 보정 시스템, QR/바코드 리딩 기능과 측면 안전 센서로 효율성과 안전을 모두 갖췄습니다.' }
       ],
       specs: [
-        { label: '기준 모델명', value: 'JC-1625' },
-        { label: '구동 시스템', value: '디지털 서보 모터, 직선 레일, 동기화 벨트, 가이드 스크류' },
-        { label: '최대 커팅 영역', value: '1,600 x 2,500 mm (컨베이어 방식으로 길이 무한대)' },
-        { label: '최대 소재 두께', value: '최대 50 mm (장착 툴에 따라 다름)' },
-        { label: '이동 및 커팅 속도', value: '이동 최대 1,800mm/s / 커팅 최대 1,500mm/s' },
+        { label: '모델명', value: 'MULTI CUT JC' },
+        { label: '커팅 속도', value: '최대 1,500mm/s' },
+        { label: '구동시스템', value: '디지털 서보 모터, 직선 레일, 동기화 벨트, 가이드 스크류' },
         { label: '반복 정밀도', value: '±0.1 mm' },
-        { label: '시스템 크기 (WxDxH)', value: '2,650 x 3,800 x 1,280 mm' },
-        { label: '사용 인터페이스', value: 'PC 및 한글화 LCD 터치 스크린' },
-        { label: '전기 사양 및 소비 전력', value: '380V 또는 220V±10% (50/60Hz) / 9.5 kW' }
+        { label: '최대 소재 두께', value: '50mm' },
+        { label: '최대 커팅 크기', value: '1,600 x 2,500 mm' },
+        { label: '크기', value: '2,650 x 3,800 x 1,280 mm' }
       ]
     },
   ]);
@@ -502,21 +737,26 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     { id: '6', name: 'DGI', logo: '/partner6.png' },
     { id: '7', name: 'Partner 7', logo: '/partner7.png' },
     { id: '8', name: 'Partner 8', logo: '/partner8.png' },
+    { id: '9', name: '3M', logo: '/3m.png' },
+    { id: '10', name: 'Inktec', logo: '/inktec.png' },
+    { id: '11', name: 'TNG', logo: '/tng.png' },
+    { id: '12', name: 'Hwajin', logo: '/hwajin.png' },
   ]);
 
   const [settings, setSettings] = useState<SiteSettings>({
-    companyName: '(주)창현',
+    companyName: '창현',
     logo: '/logo.png',
     invertLogo: false,
-    heroTitle: 'DIGITAL PRINTING\nREVOLUTION',
+    heroTitle: 'DIGITAL PRINTING\nINNOVATION',
     heroSubtitle: '최고의 기술력과 신뢰로 디지털 프린팅의 미래를 선도합니다.',
     pointColor: '#E11D48',
-    aboutTitle: '창현, 디지털 프린팅의\n새로운 기준을 제시하다.',
-    aboutVision: '(주)창현은 30년 이상의 업력을 바탕으로 실사출력 및 디지털 미디어 프린팅 시장에 최적화된 기계와 소재를 공급하고 있습니다. 우리는 단순한 판매를 넘어 고객의 비즈니스 성공을 위한 파트너로서 최선을 다합니다.',
-    aboutImage: '/about.jpg',
-    contactEmail: 'info@changhyun.com',
+    aboutTitle: 'THE FIRST & THE BEST',
+    aboutSubtitle: '디지털 프린팅의 새로운 기준',
+    aboutVision: '창현은 고객의 비즈니스 성공을 위한 파트너로서 최선을 다하겠습니다.',
+    aboutImage: '/about.png',
+    contactEmail: 'changhyunbiz@gmail.com',
     contactPhone: '(02) 2263 - 3781',
-    contactAddress: '경기도 구리시 교문동 669 (한다리길 10) (주)창현',
+    contactAddress: '경기도 구리시 교문동 669 (한다리길 10) 창현',
     popupBannerEnabled: false,
     popupBannerImageUrl: '',
     popupBannerLinkUrl: '',

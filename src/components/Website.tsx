@@ -60,7 +60,7 @@ export default function Website({ path }: { path: string }) {
             </div>
             <div className="hidden md:flex items-center gap-3 border-l border-neutral-200 pl-6">
               <SocialLink icon={<Instagram size={18} />} href="#" header />
-              <SocialLink icon={<Youtube size={18} />} href="#" header />
+              <SocialLink icon={<Youtube size={18} />} href="https://www.youtube.com/@changhyun-biz" header />
             </div>
           </div>
 
@@ -127,10 +127,10 @@ export default function Website({ path }: { path: string }) {
             <span className="inline-block px-4 py-1.5 bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs font-bold tracking-widest rounded-full mb-6">
               INNOVATIVE PRINTING SOLUTIONS
             </span>
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-8 whitespace-pre-line">
+            <h1 className="text-3xl md:text-8xl font-black tracking-tighter leading-none mb-6 whitespace-pre-line">
               {settings.heroTitle}
             </h1>
-            <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 font-light">
+            <p className="text-sm md:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 font-light">
               {settings.heroSubtitle}
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
@@ -170,9 +170,9 @@ export default function Website({ path }: { path: string }) {
       <section className="py-24 bg-brand-black border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-brand-red font-bold tracking-widest text-sm mb-4">LATEST VIDEO</h2>
-            <h3 className="text-3xl md:text-5xl font-black text-white">CHANGHYUN YOUTUBE</h3>
-            <p className="text-neutral-400 mt-4 max-w-2xl mx-auto">
+            <h2 className="text-brand-red font-bold tracking-widest text-xs md:text-sm mb-4">LATEST VIDEO</h2>
+            <h3 className="text-2xl md:text-5xl font-black text-white">CHANGHYUN YOUTUBE</h3>
+            <p className="text-neutral-400 text-sm md:text-base mt-4 max-w-2xl mx-auto">
               유튜브 채널에서 가장 최근에 업로드된 영상을 확인해보세요.
             </p>
           </div>
@@ -180,16 +180,17 @@ export default function Website({ path }: { path: string }) {
             <iframe 
               width="100%" 
               height="100%" 
-              src="https://www.youtube.com/embed/videoseries?list=UUgtOBSZ7mGu5PXaC19rk7tw" 
+              src="https://www.youtube.com/embed/2MQl9-vb8jU" 
               title="YouTube video player" 
               frameBorder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             ></iframe>
           </div>
-          <div className="mt-8 text-center">
-            <p className="text-sm text-neutral-500 bg-white/5 inline-block px-6 py-3 rounded-xl">
-              💡 <strong>관리자 안내:</strong> 유튜브 채널의 가장 최신 영상이 자동으로 업데이트되어 표시됩니다.
+          <div className="mt-8 text-center flex flex-col items-center gap-2">
+            <p className="text-xs md:text-sm text-neutral-500 bg-white/5 inline-block px-6 py-3 rounded-xl">
+              💡 <strong>유튜브 영상 반영 안내:</strong> 최신 영상으로 업데이트 되었습니다. (THE FIRST & THE BEST, 창현)
             </p>
           </div>
         </div>
@@ -225,17 +226,22 @@ export default function Website({ path }: { path: string }) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-brand-red font-bold tracking-widest text-sm mb-4">ABOUT US</h2>
-            <h3 className="text-4xl md:text-5xl font-black mb-8 leading-tight whitespace-pre-line">
+            <h2 className="text-brand-red font-bold tracking-widest text-xs md:text-sm mb-4">ABOUT US</h2>
+            <h3 className="text-2xl md:text-5xl font-black mb-4 leading-tight whitespace-pre-line">
               {settings.aboutTitle}
             </h3>
-            <p className="text-neutral-400 text-lg leading-relaxed mb-10">
+            {settings.aboutSubtitle && (
+              <h4 className="text-lg md:text-3xl font-bold text-neutral-300 mb-8">
+                {settings.aboutSubtitle}
+              </h4>
+            )}
+            <p className="text-neutral-400 text-sm md:text-lg leading-relaxed mb-10">
               {settings.aboutVision}
             </p>
             <div className="grid grid-cols-2 gap-8">
               <StatItem number="30+" label="Years Experience" />
               <StatItem number="50+" label="Global Partners" />
-              <StatItem number="1.2k" label="Machines Installed" />
+              <StatItem number="2000+" label="BUSINESS PARTNER" />
               <StatItem number="99%" label="Customer Satisfaction" />
             </div>
           </motion.div>
@@ -261,10 +267,10 @@ export default function Website({ path }: { path: string }) {
       <section id="partners" className="py-24 md:py-40 px-6 bg-white text-brand-black">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-brand-red font-bold tracking-widest text-sm mb-4">OUR PARTNERS</h2>
-            <h3 className="text-4xl md:text-5xl font-black mb-6 text-brand-black">글로벌 파트너십</h3>
-            <p className="text-neutral-600 text-lg max-w-2xl mx-auto">
-              (주)창현은 세계 최고의 디지털 프린팅 장비 및 소재 기업들과 협력하여<br />
+            <h2 className="text-brand-red font-bold tracking-widest text-xs md:text-sm mb-4">OUR PARTNERS</h2>
+            <h3 className="text-2xl md:text-5xl font-black mb-4 md:mb-6 text-brand-black">글로벌 파트너십</h3>
+            <p className="text-neutral-600 text-sm md:text-lg max-w-2xl mx-auto">
+              창현은 세계 최고의 디지털 프린팅 장비 및 소재 기업들과 협력하여<br />
               고객에게 최상의 솔루션을 제공합니다.
             </p>
           </div>
@@ -310,7 +316,7 @@ export default function Website({ path }: { path: string }) {
         {/* Hero Intro */}
         <div className="max-w-4xl mx-auto px-6 text-center flex flex-col items-center justify-center min-h-[50vh] mb-16">
           {/* Categories at the top */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-16">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-12 mb-16">
             {(['System', 'Media', 'Others'] as const).map(cat => (
               <button 
                 key={cat}
@@ -319,7 +325,7 @@ export default function Website({ path }: { path: string }) {
                   window.history.pushState({}, '', `/products/${cat.toLowerCase()}`);
                   window.dispatchEvent(new PopStateEvent('popstate'));
                 }}
-                className={`text-xl md:text-2xl font-black transition-all duration-300 pb-2 border-b-2 ${
+                className={`text-base md:text-2xl font-black transition-all duration-300 pb-2 border-b-2 ${
                   activeCategory === cat 
                     ? 'text-brand-red border-brand-red' 
                     : 'text-neutral-600 border-transparent hover:text-neutral-300'
@@ -336,13 +342,13 @@ export default function Website({ path }: { path: string }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-brand-red font-bold tracking-widest text-sm mb-6">OUR PRODUCTS</h2>
-            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black mb-8 leading-tight">
+            <h2 className="text-brand-red font-bold tracking-widest text-xs md:text-sm mb-4 md:mb-6">OUR PRODUCTS</h2>
+            <h3 className="text-2xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-8 leading-tight">
               {activeCategory === 'System' ? 'PREMIUM SYSTEMS' : activeCategory === 'Media' ? 'HIGH-QUALITY MEDIA' : 'OTHERS'}
             </h3>
-            <p className="text-neutral-400 text-lg md:text-xl leading-relaxed whitespace-pre-line mb-12">
+            <p className="text-neutral-400 text-sm md:text-xl leading-relaxed whitespace-pre-line mb-8 md:mb-12">
               {activeCategory === 'System' 
-                ? "(주)창현이 제안하는 세계 최고의 디지털 프린팅 장비 라인업입니다.\n고객의 비즈니스 환경에 맞춘 최고의 장비로 압도적인 퀄리티와 생산성을 경험해 보세요." 
+                ? "창현이 제안하는 최고의 디지털 프린팅 장비 라인업입니다.\n고객의 비즈니스 환경에 맞춘 최적의 장비로 압도적인 퀄리티와 생산성을 경험해 보세요." 
                 : activeCategory === 'Media' 
                 ? "고품질 출력을 위한 프리미엄 미디어 솔루션입니다.\n다양한 애플리케이션에 최적화된 소재로 완벽한 결과물을 완성하세요." 
                 : "잉크 및 기타 부자재 라인업입니다.\n장비의 성능을 극대화하고 최상의 출력 품질을 안정적으로 유지하세요."}
@@ -367,58 +373,55 @@ export default function Website({ path }: { path: string }) {
       <section id="contact" className="py-24 bg-brand-red">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div className="flex flex-col h-full justify-center">
-            <div className="mb-12">
-              <h2 className="text-white/80 font-bold tracking-widest text-sm mb-4">GET IN TOUCH</h2>
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
+            <div className="mb-8 md:mb-12">
+              <h2 className="text-white/80 font-bold tracking-widest text-xs md:text-sm mb-2 md:mb-4">GET IN TOUCH</h2>
+              <h3 className="text-2xl md:text-5xl lg:text-6xl font-black text-white leading-tight">
                 귀사의 비즈니스에<br />혁신을 더하세요.
               </h3>
             </div>
 
             {/* 본사 */}
             <div className="mb-12">
-              <div className="inline-block px-4 py-1.5 bg-white/10 rounded-full text-white text-sm font-bold tracking-widest mb-6">
-                본사 (HEADQUARTERS)
-              </div>
+              <h4 className="text-base md:text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>본사 (HEADQUARTERS)
+              </h4>
               <div className="space-y-6">
-                <ContactInfo icon={<Phone />} label="Phone" value={settings.contactPhone} />
-                <ContactInfo icon={<Mail />} label="Email" value={settings.contactEmail} />
-                <ContactInfo icon={<MapPin />} label="Office" value={settings.contactAddress} />
+                <ContactInfo icon={<Phone />} value={settings.contactPhone} />
+                <ContactInfo icon={<Mail />} value={settings.contactEmail} />
+                <ContactInfo icon={<MapPin />} value={settings.contactAddress} />
               </div>
             </div>
 
             {/* 지사 */}
-            <div className="flex flex-col gap-8 pt-8 border-t border-white/20">
+            <div className="flex flex-col gap-6 pt-8 border-t border-white/20">
               <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <h4 className="text-base md:text-lg font-bold text-white mb-2 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-white rounded-full"></div>강서지사
                 </h4>
-                <div className="space-y-3">
-                  <ContactInfoSmall icon={<Phone size={16} />} value="(032) 346 - 9969" />
+                <div className="space-y-2">
                   <ContactInfoSmall icon={<MapPin size={16} />} value="경기도 시흥시 안현동 360-11 (수인로3077번길 14-3)" />
                 </div>
               </div>
               <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <h4 className="text-base md:text-lg font-bold text-white mb-2 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-white rounded-full"></div>강북지사
                 </h4>
-                <div className="space-y-3">
-                  <ContactInfoSmall icon={<Phone size={16} />} value="(02) 2263 - 3782" />
+                <div className="space-y-2">
                   <ContactInfoSmall icon={<MapPin size={16} />} value="경기도 고양시 덕양구 덕은동 60-11 (중앙로46번길 10)" />
                 </div>
               </div>
               <div>
-                <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <h4 className="text-base md:text-lg font-bold text-white mb-2 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-white rounded-full"></div>영남지사
                 </h4>
-                <div className="space-y-3">
-                  <ContactInfoSmall icon={<Phone size={16} />} value="(051) 502 - 7844" />
+                <div className="space-y-2">
                   <ContactInfoSmall icon={<MapPin size={16} />} value="부산광역시 서구 대저로221번길 53 (대저1동 628-20)" />
                 </div>
               </div>
             </div>
           </div>
           <div className="bg-white rounded-3xl p-8 md:p-12 shadow-2xl sticky top-32">
-            <h4 className="text-brand-black text-2xl font-bold mb-8">문의하기</h4>
+            <h4 className="text-brand-black text-xl md:text-2xl font-bold mb-8">문의하기</h4>
             <form className="space-y-4">
               <input type="text" placeholder="성함 / 업체명" className="w-full px-6 py-4 bg-neutral-100 rounded-xl text-brand-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all" />
               <input type="text" placeholder="지역 (예: 서울, 경기 등)" className="w-full px-6 py-4 bg-neutral-100 rounded-xl text-brand-black focus:outline-none focus:ring-2 focus:ring-brand-red transition-all" />
@@ -521,20 +524,19 @@ function NavLink({ children, onClick, mobile, header }: { children: React.ReactN
 function StatItem({ number, label }: { number: string, label: string }) {
   return (
     <div>
-      <p className="text-3xl font-black text-white mb-1">{number}</p>
-      <p className="text-xs text-neutral-500 font-bold uppercase tracking-widest">{label}</p>
+      <p className="text-2xl md:text-3xl font-black text-white mb-1">{number}</p>
+      <p className="text-[10px] md:text-xs text-neutral-500 font-bold uppercase tracking-widest">{label}</p>
     </div>
   );
 }
 
-function ContactInfo({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
+function ContactInfo({ icon, value }: { icon: React.ReactNode, value: string }) {
   return (
     <div className="flex items-center gap-4 text-white">
       <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center shrink-0">
         {icon}
       </div>
       <div>
-        <p className="text-xs text-white/60 font-bold uppercase tracking-widest">{label}</p>
         <p className="font-bold">{value}</p>
       </div>
     </div>
@@ -554,7 +556,7 @@ function ContactInfoSmall({ icon, value }: { icon: React.ReactNode, value: strin
 
 function SocialLink({ icon, href, header }: { icon: React.ReactNode, href: string, header?: boolean }) {
   return (
-    <a href={href} className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${header ? 'bg-neutral-100 hover:bg-brand-red text-neutral-600 hover:text-white' : 'bg-white/5 hover:bg-brand-red text-neutral-400 hover:text-white'}`}>
+    <a href={href} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${header ? 'bg-neutral-100 hover:bg-brand-red text-neutral-600 hover:text-white' : 'bg-white/5 hover:bg-brand-red text-neutral-400 hover:text-white'}`}>
       {icon}
     </a>
   );

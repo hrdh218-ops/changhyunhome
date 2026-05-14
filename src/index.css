@@ -12,6 +12,7 @@
 @layer base {
   body {
     @apply bg-brand-black text-white font-sans antialiased;
+    overflow-x: hidden;
   }
 }
 

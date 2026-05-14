@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSite } from '../store/SiteContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, CheckCircle2, Download, Settings, Shield, Zap, X } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Download, Settings, Shield, Zap, X, Droplet, Leaf } from 'lucide-react';
 
 export default function ProductDetail({ productId }: { productId: string }) {
   const { products } = useSite();
@@ -9,19 +9,31 @@ export default function ProductDetail({ productId }: { productId: string }) {
   const [activeImage, setActiveImage] = React.useState<string>('');
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [activeSubModel, setActiveSubModel] = React.useState<string | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     if (product) {
       setActiveImage(product.image);
       setIsExpanded(false);
+      if (product.subModels && product.subModels.length > 0) {
+        setActiveSubModel(product.subModels[0]);
+      } else {
+        setActiveSubModel(null);
+      }
     }
   }, [product]);
+
+  const currentDetails = product?.subModelDetails?.find(d => d.name === activeSubModel);
 
   const navigate = (href: string) => {
     window.history.pushState({}, '', href);
     const navEvent = new PopStateEvent('popstate');
     window.dispatchEvent(navEvent);
+  };
+
+  const goBack = () => {
+    window.history.back();
   };
 
   if (!product) {
@@ -30,7 +42,7 @@ export default function ProductDetail({ productId }: { productId: string }) {
         <h2 className="text-3xl font-bold mb-4">제품을 찾을 수 없습니다</h2>
         <p className="text-neutral-400 mb-8">요청하신 제품 정보가 존재하지 않거나 삭제되었습니다.</p>
         <button 
-          onClick={() => navigate('/products')}
+          onClick={goBack}
           className="px-8 py-4 bg-brand-red text-white font-bold rounded-full hover:bg-red-700 transition-colors"
         >
           제품 목록으로 돌아가기
@@ -41,22 +53,52 @@ export default function ProductDetail({ productId }: { productId: string }) {
 
   const getModelsForMedia = (mediaType?: string) => {
     switch (mediaType) {
-      case 'PVC': return ['유광 캘지 (Glossy PVC)', '무광 캘지 (Matte PVC)', '그레이백 (Greyback PVC)', '투명 캘지 (Clear PVC)', '차량용 랩핑 필름'];
-      case 'PET': return ['백릿 (Backlit PET)', '투명 PET (Clear PET)', '화이트 PET (White PET)'];
-      case 'PP': return ['유광 합성지 (Glossy PP)', '무광 합성지 (Matte PP)', '점착/비점착 합성지'];
-      case 'TEXTILE': return ['현수막천 (Banner)', '텐트천 (Tent)', '캔버스 (Canvas)', '메쉬 (Mesh)'];
-      case 'FLEX': return ['조명용 플렉스 (Backlit)', '비조명용 플렉스 (Frontlit)', '솔리드 플렉스 (Blockout)'];
+      case 'PVC': return ['무광 PVC, B/O', '유광 PVC, B/O', '투명 PVC', '랩핑 PVC', 'LAMINATING 무광 / 유광 / 엠보'];
+      case 'PET': return ['배너 PET', 'BACKLIT', '투명 PET\n투명 PET 점착'];
+      case 'PP': return ['합성지', '합성지 B/O', 'B/O BANNER'];
+      case 'TEXTILE': return ['현수막 / 텐트천 / 캔버스', '점착 (캔버스/현수막)', '프리컷 / 깃발천', 'TEXTILE BACKLIT'];
+      case 'FLEX': return ['FLEX', 'BANNER, B/O', 'B/O MESH\nSTRIP MESH'];
       default: return ['판매 중인 모델 문의'];
     }
   };
 
-  const getInksForMedia = (mediaType?: string) => {
+  const getInksForMedia = (mediaType?: string, model?: string) => {
+    if (mediaType === 'PVC') {
+      if (model?.includes('LAMINATING')) {
+        return [];
+      }
+      if (model?.includes('무광 PVC')) {
+        return ['에코 솔벤트', 'UV 잉크', '수성 잉크', '라텍스'];
+      }
+      return ['에코 솔벤트', 'UV 잉크', '라텍스'];
+    }
+
+    if (mediaType === 'PET') {
+      if (model === '배너 PET' || model === 'BACKLIT') {
+        return ['에코 솔벤트', 'UV 잉크', '수성 잉크', '라텍스'];
+      }
+      return ['에코 솔벤트', 'UV 잉크', '라텍스'];
+    }
+
+    if (mediaType === 'PP') {
+      if (model === 'B/O BANNER') {
+        return ['수성 잉크'];
+      }
+      return ['에코 솔벤트', 'UV 잉크', '수성 잉크', '라텍스'];
+    }
+
+    if (mediaType === 'TEXTILE') {
+      if (model === 'TEXTILE BACKLIT') {
+        return ['에코 솔벤트', 'UV 잉크', '라텍스'];
+      }
+      if (model === '프리컷 / 깃발천') {
+        return ['수성 잉크'];
+      }
+      return ['에코 솔벤트', 'UV 잉크', '수성 잉크', '라텍스'];
+    }
+
     switch (mediaType) {
-      case 'PVC': return ['에코 솔벤트 (Eco-Solvent)', 'UV 잉크 (UV Curable)', '라텍스 (Latex)'];
-      case 'PET': return ['UV 잉크 (UV Curable)', '에코 솔벤트 (Eco-Solvent)'];
-      case 'PP': return ['에코 솔벤트 (Eco-Solvent)', '수성 잉크 (Water-based)'];
-      case 'TEXTILE': return ['전사 잉크 (Sublimation)', '다이렉트 텍스타일 잉크'];
-      case 'FLEX': return ['솔벤트 (Solvent)', 'UV 잉크 (UV Curable)'];
+      case 'FLEX': return ['에코 솔벤트', 'UV 잉크', '라텍스'];
       default: return ['에코 솔벤트', 'UV 잉크'];
     }
   };
@@ -67,11 +109,11 @@ export default function ProductDetail({ productId }: { productId: string }) {
         <div className="max-w-7xl mx-auto px-6">
           {/* Back Button */}
           <button 
-            onClick={() => navigate('/products')}
+            onClick={goBack}
             className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-12 group"
           >
             <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="font-bold tracking-widest text-sm">BACK TO PRODUCTS</span>
+            <span className="font-bold tracking-widest text-sm">BACK</span>
           </button>
 
           <div className="flex flex-col gap-24">
@@ -84,8 +126,8 @@ export default function ProductDetail({ productId }: { productId: string }) {
               <span className="inline-block px-4 py-1.5 bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs font-bold tracking-widest rounded-full mb-6 uppercase">
                 {product.mediaType} MEDIA
               </span>
-              <h1 className="text-4xl md:text-6xl font-black mb-8 leading-tight">{product.name}</h1>
-              <p className="text-xl text-neutral-300 leading-relaxed font-light break-keep">
+              <h1 className="text-2xl md:text-6xl font-black mb-6 md:mb-8 leading-tight">{product.name}</h1>
+              <p className="text-sm md:text-xl text-neutral-300 leading-relaxed font-light break-keep">
                 {product.description}
               </p>
             </motion.div>
@@ -98,7 +140,7 @@ export default function ProductDetail({ productId }: { productId: string }) {
             >
               <div className="flex items-center justify-center gap-4 mb-12">
                 <div className="h-[1px] w-12 bg-brand-red"></div>
-                <h3 className="text-2xl md:text-3xl font-bold text-center">예시 시공 이미지</h3>
+                <h3 className="text-lg md:text-3xl font-bold text-center">시공 이미지</h3>
                 <div className="h-[1px] w-12 bg-brand-red"></div>
               </div>
               
@@ -133,37 +175,72 @@ export default function ProductDetail({ productId }: { productId: string }) {
               transition={{ delay: 0.4 }}
               className="max-w-5xl mx-auto w-full"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Models */}
-                <div className="glass-morphism rounded-3xl p-8 md:p-10 border-t-4 border-t-brand-red">
-                  <h4 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
+              <div className="glass-morphism rounded-3xl overflow-hidden border-t-4 border-t-brand-red">
+                <div className="p-6 md:p-10">
+                  <h4 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-white flex items-center gap-3">
                     <Settings className="text-brand-red" size={28} />
-                    판매 중인 {product.mediaType} 모델
+                    타입 및 호환잉크
                   </h4>
-                  <ul className="space-y-5">
-                    {getModelsForMedia(product.mediaType).map((model, idx) => (
-                      <li key={idx} className="flex items-center gap-4 text-lg text-neutral-300">
-                        <CheckCircle2 size={24} className="text-brand-red flex-shrink-0" />
-                        {model}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <div className="flex flex-col gap-4">
+                    {getModelsForMedia(product.mediaType).map((model, idx) => {
+                      const inks = getInksForMedia(product.mediaType, model);
+                      return (
+                        <div key={idx} className="flex flex-col md:flex-row border border-white/10 bg-white/[0.02] rounded-2xl overflow-hidden hover:bg-white/[0.04] transition-colors">
+                          <div className="py-4 px-5 md:py-6 md:px-8 md:w-5/12 lg:w-1/3 bg-black/20 border-b border-white/10 md:border-b-0 md:border-r flex flex-col items-center justify-center text-center">
+                            <span className="text-xs text-brand-red font-bold mb-1 md:hidden">타입</span>
+                            <span className={`font-bold text-white leading-tight whitespace-pre-line ${model.length > 18 ? 'text-sm md:text-base lg:text-lg' : 'text-lg md:text-xl'}`}>{model}</span>
+                          </div>
+                          <div className="p-5 md:p-6 md:w-7/12 lg:w-2/3 flex flex-wrap gap-2 md:gap-4 items-center justify-center">
+                            {inks.length === 0 && <span className="text-neutral-500 font-medium">-</span>}
+                            {inks.map((inkString, iIdx) => {
+                              const s = inkString.toLowerCase();
+                              
+                              if (s.includes('전사') || s.includes('텍스타일') || s.includes('sublimation')) {
+                                return null; // The user requested to remove the '전사' (sublimation) icon completely
+                              }
 
-                {/* Ink Types */}
-                <div className="glass-morphism rounded-3xl p-8 md:p-10 border-t-4 border-t-blue-500">
-                  <h4 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
-                    <Zap className="text-blue-500" size={28} />
-                    호환 잉크 타입
-                  </h4>
-                  <ul className="space-y-5">
-                    {getInksForMedia(product.mediaType).map((ink, idx) => (
-                      <li key={idx} className="flex items-center gap-4 text-lg text-neutral-300">
-                        <CheckCircle2 size={24} className="text-blue-500 flex-shrink-0" />
-                        {ink}
-                      </li>
-                    ))}
-                  </ul>
+                              let icon = <Droplet className="text-neutral-400" size={16} />;
+                              let bgColor = 'bg-white/5';
+                              let borderColor = 'border-white/10';
+                              let label = inkString;
+                              
+                              if (s.includes('수성')) {
+                                icon = <Droplet size={16} className="text-blue-400" />;
+                                bgColor = 'bg-blue-500/10';
+                                borderColor = 'border-blue-500/30';
+                                label = 'WATERBASE';
+                              } else if (s.includes('솔벤트') || s.includes('solvent')) {
+                                icon = <Droplet size={16} className="text-orange-400" />;
+                                bgColor = 'bg-orange-500/10';
+                                borderColor = 'border-orange-500/30';
+                                label = 'ECO\nSOLVENT';
+                              } else if (s.includes('uv')) {
+                                icon = <Zap size={16} className="text-purple-400" />;
+                                bgColor = 'bg-purple-500/10';
+                                borderColor = 'border-purple-500/30';
+                                label = 'UV';
+                              } else if (s.includes('라텍스') || s.includes('latex')) {
+                                icon = <Leaf size={16} className="text-green-400" />;
+                                bgColor = 'bg-green-500/10';
+                                borderColor = 'border-green-500/30';
+                                label = 'LATEX';
+                              }
+
+                              return (
+                                <div 
+                                  key={iIdx} 
+                                  className={`w-[60px] h-[60px] md:w-[84px] md:h-[84px] flex flex-col items-center justify-center gap-1 rounded-xl border ${bgColor} ${borderColor} hover:bg-white/10 transition-colors shrink-0`}
+                                >
+                                  {icon}
+                                  <span className="text-[9px] md:text-[11px] leading-tight font-bold text-white whitespace-pre-line text-center">{label}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -211,11 +288,11 @@ export default function ProductDetail({ productId }: { productId: string }) {
       <div className="max-w-7xl mx-auto px-6">
         {/* Back Button */}
         <button 
-          onClick={() => navigate('/products')}
+          onClick={goBack}
           className="flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-12 group"
         >
           <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="font-bold tracking-widest text-sm">BACK TO PRODUCTS</span>
+          <span className="font-bold tracking-widest text-sm">BACK</span>
         </button>
 
         {/* Product Hero */}
@@ -272,8 +349,8 @@ export default function ProductDetail({ productId }: { productId: string }) {
               <span className="inline-block px-4 py-1.5 bg-brand-red/10 border border-brand-red/30 text-brand-red text-xs font-bold tracking-widest rounded-full mb-6 uppercase">
                 {product.category}
               </span>
-              <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">{product.name}</h1>
-              <p className="text-xl text-neutral-400 leading-relaxed font-light">
+              <h1 className="text-2xl md:text-6xl font-black mb-4 md:mb-6 leading-tight">{product.name}</h1>
+              <p className="text-sm md:text-xl text-neutral-400 leading-relaxed font-light">
                 {product.description}
               </p>
             </div>
@@ -297,10 +374,6 @@ export default function ProductDetail({ productId }: { productId: string }) {
                 className="px-8 py-4 bg-brand-red text-white font-bold rounded-full hover:bg-red-700 transition-colors text-center"
               >
                 도입 문의하기
-              </button>
-              <button className="px-8 py-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold rounded-full transition-colors flex items-center justify-center gap-2">
-                <Download size={18} />
-                브로셔 다운로드
               </button>
             </div>
           </motion.div>
@@ -335,12 +408,51 @@ export default function ProductDetail({ productId }: { productId: string }) {
           className="mb-24"
         >
           <div className="text-center mb-16">
+            {product.subModels && product.subModels.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-12">
+                {product.subModels.map((modelName, idx) => {
+                  const modelImg = idx === 0 ? product.image : (product.gallery?.[idx - 1] || product.image);
+                  return (
+                    <div key={modelName} className="flex flex-col items-center gap-4">
+                      <button
+                        onClick={() => setActiveSubModel(modelName)}
+                        className={`px-6 py-3 rounded-full font-bold transition-colors shadow-lg ${
+                          activeSubModel === modelName 
+                            ? 'bg-brand-red text-white' 
+                            : 'bg-white/5 text-neutral-400 hover:bg-white/10 hover:text-white border border-white/10'
+                        }`}
+                      >
+                        {modelName}
+                      </button>
+                      <div 
+                        className={`w-32 h-32 md:w-40 md:h-40 rounded-2xl bg-white/5 border overflow-hidden flex items-center justify-center p-4 cursor-pointer transition-colors shadow-xl ${
+                          activeSubModel === modelName ? 'border-brand-red' : 'border-white/10 hover:border-brand-red/50'
+                        }`}
+                        onClick={() => {
+                          setActiveSubModel(modelName);
+                          setActiveImage(modelImg);
+                        }}
+                      >
+                        <img 
+                          src={modelImg} 
+                          alt={modelName} 
+                          className="w-full h-full object-contain hover:scale-110 transition-transform duration-500" 
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=2071';
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <h2 className="text-brand-red font-bold tracking-widest text-sm mb-4">KEY FEATURES</h2>
-            <h3 className="text-3xl md:text-4xl font-black">주요 특장점</h3>
+            <h3 className="text-xl md:text-4xl font-black">주요 특장점</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {(product.features || [
+            {(currentDetails?.features || product.features || [
               { title: '혁신적인 기술력', desc: '최신 프린트 헤드 기술을 적용하여 미세한 디테일까지 완벽하게 표현합니다.' },
               { title: '뛰어난 생산성', desc: '대량 작업에서도 속도 저하 없이 일관된 고품질 결과물을 제공합니다.' },
               { title: '친환경 솔루션', desc: '에너지 효율을 높이고 유해 물질 배출을 최소화한 친환경 설계가 적용되었습니다.' }
@@ -365,11 +477,11 @@ export default function ProductDetail({ productId }: { productId: string }) {
         >
           <div className="flex items-center gap-4 mb-12">
             <Settings className="text-brand-red" size={32} />
-            <h3 className="text-2xl md:text-3xl font-black">제품 사양 (Specifications)</h3>
+            <h3 className="text-lg md:text-3xl font-black">제품 사양 (Specifications) {activeSubModel && `- ${activeSubModel}`}</h3>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-6">
-            {(product.specs || [
+            {(currentDetails?.specs || product.specs || [
               { label: '모델명', value: product.name },
               { label: '카테고리', value: product.category },
               { label: '최대 해상도', value: '2400 x 1200 dpi' },
@@ -385,6 +497,19 @@ export default function ProductDetail({ productId }: { productId: string }) {
               </div>
             ))}
           </div>
+
+          {product.notes && product.notes.length > 0 && (
+            <div className="mt-8">
+              <ul className="text-neutral-400 space-y-1.5">
+                {product.notes.map((note, idx) => (
+                  <li key={idx} className="text-sm flex items-start">
+                    <span className="mr-1.5">-</span>
+                    <span>{note}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

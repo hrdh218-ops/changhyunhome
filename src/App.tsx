@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SiteProvider } from './store/SiteContext';
+import Website from './components/Website';
 import AdminDashboard from './components/AdminDashboard';
 import Maintenance from './components/Maintenance';
 
@@ -28,7 +29,7 @@ export default function App() {
 
   return (
       <SiteProvider>
-      {path === '/admin' ? <AdminDashboard /> : <Maintenance />}
+      {path === '/admin' ? <AdminDashboard /> : <Website path={path} />}
     </SiteProvider>
   );
 }
