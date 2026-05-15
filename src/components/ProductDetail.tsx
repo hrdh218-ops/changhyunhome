@@ -52,6 +52,9 @@ export default function ProductDetail({ productId }: { productId: string }) {
   }
 
   const getModelsForMedia = (mediaType?: string) => {
+    if (product.id === 'magic-fabric') return ['Magic Fabric'];
+    if (product.id === 'magic-cal-series') return ['P200K', 'P200', 'P175'];
+
     switch (mediaType) {
       case 'PVC': return ['무광 PVC, B/O', '유광 PVC, B/O', '투명 PVC', '랩핑 PVC', 'LAMINATING 무광 / 유광 / 엠보'];
       case 'PET': return ['배너 PET', 'BACKLIT', '투명 PET\n투명 PET 점착'];
@@ -63,6 +66,9 @@ export default function ProductDetail({ productId }: { productId: string }) {
   };
 
   const getInksForMedia = (mediaType?: string, model?: string) => {
+    if (product.id === 'magic-fabric') return ['에코 솔벤트', 'UV 잉크', '라텍스'];
+    if (product.id === 'magic-cal-series') return ['에코 솔벤트', 'UV 잉크', '라텍스'];
+
     if (mediaType === 'PVC') {
       if (model?.includes('LAMINATING')) {
         return [];

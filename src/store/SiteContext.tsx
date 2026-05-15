@@ -200,6 +200,45 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ]
     },
     {
+      id: 'magic-cal-series',
+      category: 'Media',
+      mediaType: 'PVC',
+      name: 'Magic Cal Series',
+      description: '컴팩트한 크기에 담긴 압도적 생산성. 미디어 관련 전문가들이 가장 많이 선택하는 베스트셀러 모델입니다.',
+      image: '/products/media/magic-cal-series.png',
+      features: [
+        { title: '우수한 발색력', desc: '특수 코팅 처리로 선명하고 깊이 있는 색상 표현이 가능합니다.' },
+        { title: '뛰어난 내구성', desc: '외부 환경에서도 변색이 적어 장기간 유지됩니다.' },
+        { title: '친환경 소재', desc: '유해 물질 없는 안전한 성분으로 제작되었습니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'Magic Cal Series' },
+        { label: '타입', value: 'P200K, P200, P175' },
+        { label: '호환 잉크', value: '솔벤(Solvent), UV, 라텍스(Latex)' },
+        { label: '표면재', value: 'PVC' },
+        { label: '폭(Width)', value: '1,000 / 1,270 / 1,370 / 1,520 mm' }
+      ]
+    },
+    {
+      id: 'magic-fabric',
+      category: 'Media',
+      mediaType: 'TEXTILE',
+      name: 'Magic Fabric',
+      description: '이음새 없는 차세대 친환경 공간 솔루션. 빛을 머금은 듯한 마법 같은 발색력과 가벼움을 경험하세요.',
+      image: '/products/media/magic-fabric.png',
+      features: [
+        { title: '가벼운 무게', desc: '초경량 소재로 이동 및 설치가 매우 간편합니다.' },
+        { title: '조명용 최적화', desc: '빛 투과율이 뛰어나 백릿 및 라이트 박스에 최적화되어 있습니다.' },
+        { title: '친환경 인테리어', desc: '환경 친화적 직물 소재로 고급스러운 공간 연출이 가능합니다.' }
+      ],
+      specs: [
+        { label: '모델명', value: 'Magic Fabric' },
+        { label: '호환 잉크', value: '솔벤(Solvent), UV, 라텍스(Latex)' },
+        { label: '소재', value: '100% Polyester 특수 원단' },
+        { label: '폭(Width)', value: '1,000 / 1,500 / 3,200 mm' }
+      ]
+    },
+    {
       id: 'm1',
       category: 'Media',
       mediaType: 'PVC',
@@ -233,7 +272,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: '2',
       category: 'Media',
       mediaType: 'PP',
-      name: 'PP (합성지)',
+      name: 'PP(합성지, 유포지)',
       description: '우수한 발색력과 내구성을 갖춘 고품질 합성지로, 실내외 다양한 배너 및 광고물에 적합합니다.',
       image: '/products/media/pp/main.png',
       gallery: [
@@ -446,7 +485,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ],
       specs: [
         { label: '모델명', value: 'ROLAND UG-642 UV' },
-        { label: '인쇄 속도', value: '최대 20㎡/h' },
+        { label: '인쇄 속도', value: '최대 32㎡/h' },
         { label: '프린트헤드', value: '듀얼 스태거드 피에조 잉크젯 헤드' },
         { label: '최대 해상도', value: '1,200 dpi' },
         { label: '잉크타입', value: 'CMYK, Wh, Wh, Vr, Vr' },
@@ -474,7 +513,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ],
       specs: [
         { label: '모델명', value: 'ROLAND LG-640 UV' },
-        { label: '인쇄 속도', value: '최대 12㎡/h' },
+        { label: '인쇄 속도', value: '최대 15㎡/h' },
         { label: '프린트헤드', value: '스태거드 배열 피에조 잉크젯 헤드' },
         { label: '최대 해상도', value: '1,200 dpi' },
         { label: '잉크타입', value: 'CMYK, Or, R, Wh, Vr' },

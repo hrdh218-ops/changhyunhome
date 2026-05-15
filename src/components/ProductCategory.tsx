@@ -146,6 +146,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
+                onClick={() => navigate('/products/magic-fabric')}
                 className="group relative bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer flex flex-col"
               >
                 <div className="aspect-[16/9] w-full overflow-hidden relative bg-black/50">
@@ -177,18 +178,19 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                 </div>
               </motion.div>
 
-              {/* Best Product 2: P200 */}
+              {/* Best Product 2: Magic Cal Series */}
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 viewport={{ once: true }}
+                onClick={() => navigate('/products/magic-cal-series')}
                 className="group relative bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-brand-red/50 hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-500 cursor-pointer flex flex-col"
               >
                 <div className="aspect-[16/9] w-full overflow-hidden relative bg-black/50 flex items-center justify-center">
                   <img 
-                    src="/products/media/p200.png" 
-                    alt="P200" 
+                    src="/products/media/magic-cal-series.png" 
+                    alt="Magic Cal Series" 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-80" 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/80 to-transparent"></div>
@@ -204,7 +206,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                   </div>
                 </div>
                 <div className="p-5 md:p-6 flex-grow flex flex-col relative z-10 -mt-6">
-                  <h4 className="text-xl md:text-2xl font-black text-white mb-2">P200</h4>
+                  <h4 className="text-xl md:text-2xl font-black text-white mb-2">Magic Cal Series</h4>
                   <p className="text-neutral-400 leading-relaxed mb-4 flex-grow text-sm">
                     컴팩트한 크기에 담긴 압도적 생산성. 미디어 관련 전문가들이 가장 많이 선택하는 베스트셀러 모델입니다.
                   </p>
@@ -227,6 +229,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
           <AnimatePresence mode="popLayout">
             {products
               .filter(p => p.category === category)
+              .filter(p => p.id !== 'magic-cal-series' && p.id !== 'magic-fabric')
               .filter(p => {
                 const name = p.name.toLowerCase();
                 const desc = p.description?.toLowerCase() || '';
