@@ -179,7 +179,7 @@ export default function AdminDashboard() {
                     </div>
                     <InputField label="메인 타이틀" name="heroTitle" defaultValue={settings.heroTitle} isTextArea />
                     <InputField label="메인 서브타이틀" name="heroSubtitle" defaultValue={settings.heroSubtitle} isTextArea />
-                    <InputField label="유튜브 영상 URL (Embed)" name="youtubeVideoUrl" defaultValue={settings.youtubeVideoUrl} placeholder="https://www.youtube.com/embed/..." />
+                    <InputField label="유튜브 영상 URL 또는 채널 ID (시작: UC... 입력 시 최신영상 자동재생)" name="youtubeVideoUrl" defaultValue={settings.youtubeVideoUrl} placeholder="https://www.youtube.com/embed/... 또는 UC..." />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <InputField label="연락처 이메일" name="contactEmail" defaultValue={settings.contactEmail} />
                       <InputField label="연락처 전화번호" name="contactPhone" defaultValue={settings.contactPhone} />

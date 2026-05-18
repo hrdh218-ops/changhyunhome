@@ -12,6 +12,40 @@ export default function Website({ path }: { path: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'System' | 'Media' | 'Others'>('System');
   const [showPromoPopup, setShowPromoPopup] = useState(false);
+  const [latestVideoEmbed, setLatestVideoEmbed] = useState<string>('');
+
+  useEffect(() => {
+    let active = true;
+    const urlOrId = settings.youtubeVideoUrl;
+    if (urlOrId && !urlOrId.startsWith('http') && urlOrId.startsWith('UC')) {
+      fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${urlOrId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (active && data.status === 'ok' && data.items && data.items.length > 0) {
+             const videoId = data.items[0].guid.split(':')[2];
+             setLatestVideoEmbed(`https://www.youtube.com/embed/${videoId}`);
+          }
+        })
+        .catch(console.error);
+    } else if (urlOrId) {
+      let embedUrl = urlOrId;
+      try {
+        if (urlOrId.includes('watch?v=')) {
+          const videoId = new URL(urlOrId).searchParams.get('v');
+          if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (urlOrId.includes('youtu.be/')) {
+          const videoId = urlOrId.split('youtu.be/')[1].split('?')[0];
+          if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+      } catch (e) {
+        console.error('Invalid URL:', e);
+      }
+      setLatestVideoEmbed(embedUrl);
+    } else {
+      setLatestVideoEmbed('');
+    }
+    return () => { active = false; };
+  }, [settings.youtubeVideoUrl]);
 
   useEffect(() => {
     const dismissedUntil = localStorage.getItem('popupDismissed_v2');
@@ -193,16 +227,22 @@ export default function Website({ path }: { path: string }) {
             </p>
           </div>
           <div className="aspect-video w-full max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-2xl border border-white/10 bg-neutral-900">
-            <iframe 
-              width="100%" 
-              height="100%" 
-              src={settings.youtubeVideoUrl} 
-              title="YouTube video player" 
-              frameBorder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            ></iframe>
+            {latestVideoEmbed ? (
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src={latestVideoEmbed} 
+                title="YouTube video player" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-neutral-500">
+                영상을 불러오는 중입니다...
+              </div>
+            )}
           </div>
           <div className="mt-8 text-center flex flex-col items-center gap-2">
             <p className="text-xs md:text-sm text-neutral-500 bg-white/5 inline-block px-6 py-3 rounded-xl">
