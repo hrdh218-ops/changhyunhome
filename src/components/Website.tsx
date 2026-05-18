@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSite } from '../store/SiteContext';
-import { Menu, X, ChevronRight, Phone, Mail, MapPin, Instagram, Youtube, ExternalLink, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronRight, Phone, Mail, MapPin, Instagram, Youtube, ExternalLink, ArrowRight, Newspaper } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProductDetail from './ProductDetail';
 import ProductCategory from './ProductCategory';
+import NewsBoard from './NewsBoard';
 
 export default function Website({ path }: { path: string }) {
-  const { settings, products, partners } = useSite();
+  const { settings, products, partners, news } = useSite();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<'System' | 'Media' | 'Others'>('System');
   const [showPromoPopup, setShowPromoPopup] = useState(false);
 
   useEffect(() => {
-    if (path === '/' && settings.popupBannerEnabled && !sessionStorage.getItem('popupDismissed')) {
+    const dismissedUntil = localStorage.getItem('popupDismissed_v2');
+    const isDismissed = dismissedUntil && new Date().getTime() < parseInt(dismissedUntil, 10);
+    
+    if (path === '/' && settings.popupBannerEnabled && !isDismissed) {
       const timer = setTimeout(() => setShowPromoPopup(true), 1000);
       return () => clearTimeout(timer);
     } else {
@@ -23,7 +27,12 @@ export default function Website({ path }: { path: string }) {
 
   const handleClosePopup = () => {
     setShowPromoPopup(false);
-    sessionStorage.setItem('popupDismissed', 'true');
+  };
+
+  const handleClosePopupToday = () => {
+    setShowPromoPopup(false);
+    const tomorrow = new Date().getTime() + 24 * 60 * 60 * 1000;
+    localStorage.setItem('popupDismissed_v2', tomorrow.toString());
   };
 
   useEffect(() => {
@@ -61,6 +70,13 @@ export default function Website({ path }: { path: string }) {
             <div className="hidden md:flex items-center gap-3 border-l border-neutral-200 pl-6">
               <SocialLink icon={<Instagram size={18} />} href="#" header />
               <SocialLink icon={<Youtube size={18} />} href="https://www.youtube.com/@changhyun-biz" header />
+              <button 
+                onClick={() => navigate('/news')}
+                className="p-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 hover:text-brand-black rounded-full transition-colors flex items-center justify-center"
+                title="사내 뉴스"
+              >
+                <Newspaper size={18} />
+              </button>
             </div>
           </div>
 
@@ -310,6 +326,11 @@ export default function Website({ path }: { path: string }) {
         <ProductDetail productId={path.split('/')[2]} />
       )}
 
+      {/* News Route */}
+      {path.startsWith('/news') && (
+        <NewsBoard path={path} navigate={navigate} />
+      )}
+
       {/* Products Section */}
       {(path === '/products') && (
       <section id="products" className="py-24 md:py-32 bg-brand-dark-gray/50 min-h-screen flex flex-col">
@@ -462,7 +483,7 @@ export default function Website({ path }: { path: string }) {
 
       {/* Promo Popup */}
       <AnimatePresence>
-        {showPromoPopup && settings.popupBannerImageUrl && (
+        {showPromoPopup && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
             <motion.div
               initial={{ opacity: 0 }}
@@ -471,36 +492,97 @@ export default function Website({ path }: { path: string }) {
               className="absolute inset-0 bg-black/60 backdrop-blur-sm"
               onClick={handleClosePopup}
             />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full z-10 bg-transparent"
-            >
-              <button
-                onClick={handleClosePopup}
-                className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-colors z-10"
-              >
-                <X size={18} />
-              </button>
+            {(() => {
+              const popupNews = settings.popupNewsId ? news.find(n => n.id === settings.popupNewsId) : null;
               
-              {settings.popupBannerLinkUrl ? (
-                <a href={settings.popupBannerLinkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full" onClick={() => setShowPromoPopup(false)}>
-                  <img src={settings.popupBannerImageUrl} alt="Popup Banner" className="w-full h-auto max-h-[80vh] object-contain rounded-2xl bg-white" />
-                </a>
-              ) : (
-                <img src={settings.popupBannerImageUrl} alt="Popup Banner" className="w-full h-auto max-h-[80vh] object-contain rounded-2xl bg-white" />
-              )}
-              
-              <div className="absolute bottom-0 inset-x-0 bg-black/5 p-2 flex justify-end backdrop-blur-sm rounded-b-2xl">
-                <button 
-                  onClick={handleClosePopup}
-                  className="text-white text-xs px-3 py-1 bg-black/40 hover:bg-black/60 rounded-full transition-colors"
-                >
-                  오늘 하루 보지 않기
-                </button>
-              </div>
-            </motion.div>
+              if (popupNews) {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="relative rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full z-10 bg-brand-black border border-white/10"
+                  >
+                    <button
+                      onClick={handleClosePopup}
+                      className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-colors z-20"
+                    >
+                      <X size={18} />
+                    </button>
+                    
+                    <div className="flex flex-col max-h-[85vh]">
+                      {popupNews.imageUrl && (
+                        <div className="w-full shrink-0 relative cursor-pointer" onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}>
+                          <img src={popupNews.imageUrl} alt={popupNews.title} className="w-full aspect-[4/3] object-cover" />
+                        </div>
+                      )}
+                      <div className="p-6 md:p-8 overflow-y-auto w-full flex flex-col items-center text-center">
+                        <div className="flex items-center justify-center gap-2 text-brand-red mb-3">
+                          <Newspaper size={16} />
+                          <span className="text-xs font-bold tracking-widest">사내 주요 뉴스</span>
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-black text-white mb-6 leading-tight">{popupNews.title}</h3>
+                        
+                        <div className="flex justify-center mt-2">
+                          <button 
+                            onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}
+                            className="bg-brand-red text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-red-700 transition-colors"
+                          >
+                            자세히 보기
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white/5 p-2 flex justify-end border-t border-white/10 shrink-0">
+                      <button 
+                        onClick={handleClosePopupToday}
+                        className="text-neutral-400 hover:text-white text-xs px-4 py-2 transition-colors font-medium rounded-full hover:bg-white/10"
+                      >
+                        오늘 하루 보지 않기
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              }
+
+              if (settings.popupBannerImageUrl) {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="relative rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full z-10 bg-transparent"
+                  >
+                    <button
+                      onClick={handleClosePopup}
+                      className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-colors z-10"
+                    >
+                      <X size={18} />
+                    </button>
+                    
+                    {settings.popupBannerLinkUrl ? (
+                      <a href={settings.popupBannerLinkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full" onClick={() => setShowPromoPopup(false)}>
+                        <img src={settings.popupBannerImageUrl} alt="Popup Banner" className="w-full h-auto max-h-[80vh] object-contain rounded-2xl bg-white" />
+                      </a>
+                    ) : (
+                      <img src={settings.popupBannerImageUrl} alt="Popup Banner" className="w-full h-auto max-h-[80vh] object-contain rounded-2xl bg-white" />
+                    )}
+                    
+                    <div className="absolute bottom-0 inset-x-0 bg-black/5 p-2 flex justify-end backdrop-blur-sm rounded-b-2xl">
+                      <button 
+                        onClick={handleClosePopupToday}
+                        className="text-white text-xs px-3 py-1 bg-black/40 hover:bg-black/60 rounded-full transition-colors"
+                      >
+                        오늘 하루 보지 않기
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              }
+
+              return null;
+            })()}
           </div>
         )}
       </AnimatePresence>

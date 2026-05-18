@@ -170,7 +170,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                 <div className="p-5 md:p-6 flex-grow flex flex-col relative z-10 -mt-6">
                   <h4 className="text-xl md:text-2xl font-black text-white mb-2">Magic Fabric</h4>
                   <p className="text-neutral-400 leading-relaxed mb-4 flex-grow text-sm">
-                    이음새 없는 차세대 친환경 공간 솔루션. 빛을 머금은 듯한 마법 같은 발색력과 가벼움을 경험하세요.
+                    최대 3.2M 와이드까지 가능한 다양한 규격, 구김없는 텐션과 마법같은 선명한 발색을 경험하세요.
                   </p>
                   <div className="inline-flex items-center gap-2 text-xs font-bold text-white group-hover:text-blue-500 transition-colors mt-auto">
                     Details <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -208,7 +208,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                 <div className="p-5 md:p-6 flex-grow flex flex-col relative z-10 -mt-6">
                   <h4 className="text-xl md:text-2xl font-black text-white mb-2">Magic Cal Series</h4>
                   <p className="text-neutral-400 leading-relaxed mb-4 flex-grow text-sm">
-                    컴팩트한 크기에 담긴 압도적 생산성. 미디어 관련 전문가들이 가장 많이 선택하는 베스트셀러 모델입니다.
+                    라미네이팅 없이 완성하는 완벽한 실사출력 솔루션을 경험하세요.
                   </p>
                   <div className="inline-flex items-center gap-2 text-xs font-bold text-white group-hover:text-brand-red transition-colors mt-auto">
                     Details <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />

@@ -29,6 +29,15 @@ export interface Partner {
   url?: string;
 }
 
+export interface News {
+  id: string;
+  title: string;
+  date: string;
+  content: string;
+  imageUrl?: string;
+  isPopup?: boolean;
+}
+
 export interface SiteSettings {
   companyName: string;
   logo: string;
@@ -46,11 +55,13 @@ export interface SiteSettings {
   popupBannerEnabled: boolean;
   popupBannerImageUrl: string;
   popupBannerLinkUrl: string;
+  popupNewsId?: string;
 }
 
 interface SiteContextType {
   products: Product[];
   partners: Partner[];
+  news: News[];
   settings: SiteSettings;
   updateSettings: (newSettings: Partial<SiteSettings>) => void;
   addProduct: (product: Omit<Product, 'id'>) => void;
@@ -61,6 +72,9 @@ interface SiteContextType {
   addPartner: (partner: Omit<Partner, 'id'>) => void;
   updatePartner: (id: string, partner: Partial<Partner>) => void;
   deletePartner: (id: string) => void;
+  addNews: (newsItem: Omit<News, 'id'>) => void;
+  updateNews: (id: string, newsItem: Partial<News>) => void;
+  deleteNews: (id: string) => void;
 }
 
 const SiteContext = createContext<SiteContextType | undefined>(undefined);
@@ -204,7 +218,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'Media',
       mediaType: 'PVC',
       name: 'Magic Cal Series',
-      description: '컴팩트한 크기에 담긴 압도적 생산성. 미디어 관련 전문가들이 가장 많이 선택하는 베스트셀러 모델입니다.',
+      description: '라미네이팅 없이 완성되는 혁신적인 PVC 솔루션을 경험하세요.',
       image: '/products/media/magic-cal-series.png',
       features: [
         { title: '우수한 발색력', desc: '특수 코팅 처리로 선명하고 깊이 있는 색상 표현이 가능합니다.' },
@@ -224,7 +238,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       category: 'Media',
       mediaType: 'TEXTILE',
       name: 'Magic Fabric',
-      description: '이음새 없는 차세대 친환경 공간 솔루션. 빛을 머금은 듯한 마법 같은 발색력과 가벼움을 경험하세요.',
+      description: '최대 5M까지 가능한 다양한 규격, 구김없는 텐션, 부드러운 터치감과 선명한 발색을 경험하세요.',
       image: '/products/media/magic-fabric.png',
       features: [
         { title: '가벼운 무게', desc: '초경량 소재로 이동 및 설치가 매우 간편합니다.' },
@@ -796,9 +810,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     contactEmail: 'changhyunbiz@gmail.com',
     contactPhone: '(02) 2263 - 3781',
     contactAddress: '경기도 구리시 교문동 669 (한다리길 10) 창현',
-    popupBannerEnabled: false,
+    popupBannerEnabled: true,
     popupBannerImageUrl: '',
     popupBannerLinkUrl: '',
+    popupNewsId: '1',
   });
 
   const updateSettings = (newSettings: Partial<SiteSettings>) => {
@@ -853,11 +868,35 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setPartners(prev => prev.filter(p => p.id !== id));
   };
 
+  const [news, setNews] = useState<News[]>([
+    {
+      id: '1',
+      title: '새로운 시스템 환경 구축 완료',
+      date: '2026.05.15',
+      content: '창현에서는 고객 만족을 위해 새로운 시스템 환경 구축을 완료하였습니다.',
+      isPopup: false,
+      imageUrl: '/hero-image.png'
+    }
+  ]);
+
+  const addNews = (newsItem: Omit<News, 'id'>) => {
+    setNews(prev => [{ ...newsItem, id: Date.now().toString() }, ...prev]);
+  };
+
+  const updateNews = (id: string, newsItem: Partial<News>) => {
+    setNews(prev => prev.map(n => n.id === id ? { ...n, ...newsItem } : n));
+  };
+
+  const deleteNews = (id: string) => {
+    setNews(prev => prev.filter(n => n.id !== id));
+  };
+
   return (
     <SiteContext.Provider value={{
-      products, partners, settings, updateSettings,
+      products, partners, news, settings, updateSettings,
       addProduct, updateProduct, deleteProduct, moveProductUp, moveProductDown,
-      addPartner, updatePartner, deletePartner
+      addPartner, updatePartner, deletePartner,
+      addNews, updateNews, deleteNews
     }}>
       {children}
     </SiteContext.Provider>

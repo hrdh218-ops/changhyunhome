@@ -1,13 +1,37 @@
 import React, { useState } from 'react';
 import { useSite } from '../store/SiteContext';
-import { Settings, Package, Palette, Save, Plus, Trash2, Edit2, X, Users, ArrowUp, ArrowDown, Image as ImageIcon } from 'lucide-react';
+import { Settings, Package, Palette, Save, Plus, Trash2, Edit2, X, Users, ArrowUp, ArrowDown, Image as ImageIcon, Newspaper } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function AdminDashboard() {
-  const { settings, updateSettings, products, addProduct, updateProduct, deleteProduct, moveProductUp, moveProductDown, partners, addPartner, updatePartner, deletePartner } = useSite();
-  const [activeTab, setActiveTab] = useState<'general' | 'products' | 'popup' | 'partners' | 'design'>('general');
+  const { settings, updateSettings, products, addProduct, updateProduct, deleteProduct, moveProductUp, moveProductDown, partners, addPartner, updatePartner, deletePartner, news, addNews, updateNews, deleteNews } = useSite();
+  const [activeTab, setActiveTab] = useState<'general' | 'products' | 'popup' | 'partners' | 'design' | 'news'>('general');
   const [editingItem, setEditingItem] = useState<any>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(false);
+
+  React.useEffect(() => {
+    if (sessionStorage.getItem('adminAuth') === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validUsername = import.meta.env.VITE_ADMIN_USERNAME || 'admin';
+    const validPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin';
+    
+    if (username === validUsername && password === validPassword) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('adminAuth', 'true');
+      setLoginError(false);
+    } else {
+      setLoginError(true);
+    }
+  };
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -28,6 +52,55 @@ export default function AdminDashboard() {
     updateSettings(updates as any);
     showToast('설정이 성공적으로 저장되었습니다.');
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full bg-neutral-900 border border-white/10 p-8 rounded-2xl">
+          <h1 className="text-2xl font-bold text-white mb-6 text-center tracking-tight">관리자 로그인</h1>
+          {loginError && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm mb-4 text-center">
+              아이디 또는 비밀번호가 올바르지 않습니다.
+            </div>
+          )}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm text-neutral-400 mb-1">아이디</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-neutral-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-red"
+                placeholder="아이디를 입력하세요"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-neutral-400 mb-1">비밀번호</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-neutral-800 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-red"
+                placeholder="비밀번호를 입력하세요"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-brand-red hover:bg-red-700 text-white font-bold py-3 rounded-xl transition-colors mt-2"
+            >
+              로그인
+            </button>
+          </form>
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="w-full mt-4 text-neutral-400 hover:text-white transition-colors text-sm underline"
+          >
+            사이트로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white p-4 md:p-8 relative">
@@ -63,6 +136,7 @@ export default function AdminDashboard() {
           <nav className="flex flex-col gap-2">
             <TabButton active={activeTab === 'general'} onClick={() => setActiveTab('general')} icon={<Settings size={18} />} label="일반 설정" />
             <TabButton active={activeTab === 'products'} onClick={() => setActiveTab('products')} icon={<Package size={18} />} label="제품 관리" />
+            <TabButton active={activeTab === 'news'} onClick={() => setActiveTab('news')} icon={<Newspaper size={18} />} label="사내 뉴스 관리" />
             <TabButton active={activeTab === 'popup'} onClick={() => setActiveTab('popup')} icon={<ImageIcon size={18} />} label="팝업 배너 관리" />
             <TabButton active={activeTab === 'partners'} onClick={() => setActiveTab('partners')} icon={<Users size={18} />} label="파트너 관리" />
             <TabButton active={activeTab === 'design'} onClick={() => setActiveTab('design')} icon={<Palette size={18} />} label="디자인 커스터마이징" />
@@ -188,13 +262,30 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-white/80 mb-2">사내 뉴스글 연결 (선택)</label>
+                        <select 
+                          name="popupNewsId" 
+                          defaultValue={settings.popupNewsId || ""}
+                          className="w-full bg-neutral-900 border border-white/20 rounded-lg p-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition-all appearance-none"
+                        >
+                          <option value="">직접 이미지 등록하기 (글 선택 안함)</option>
+                          {news.map(n => (
+                            <option key={n.id} value={n.id}>{n.title}</option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-neutral-400 mt-2">뉴스글을 선택하면 해당 뉴스글이 팝업으로 표시됩니다. 아래 URL 설정은 무시됩니다.</p>
+                      </div>
+
+                      <hr className="border-white/10 my-6" />
+
                       <InputField label="팝업 이미지 URL" name="popupBannerImageUrl" defaultValue={settings.popupBannerImageUrl} placeholder="/popup-banner.png 또는 https://..." />
                       <div className="text-xs text-neutral-400 -mt-2 mb-4">권장 이미지 비율은 1:1 또는 4:5이며, 고화질 이미지를 권장합니다.</div>
                       
                       <InputField label="배너 클릭 시 이동할 링크 URL" name="popupBannerLinkUrl" defaultValue={settings.popupBannerLinkUrl} placeholder="https://..." />
                     </div>
 
-                    {settings.popupBannerImageUrl && (
+                    {!settings.popupNewsId && settings.popupBannerImageUrl && (
                       <div className="mt-4 p-4 border border-white/10 rounded-xl bg-neutral-900/50">
                         <p className="text-sm text-neutral-400 mb-2">현재 팝업 배너 미리보기</p>
                          <img src={settings.popupBannerImageUrl} alt="Popup Preview" className="max-w-[300px] max-h-[400px] object-cover rounded-lg shadow-xl" />
@@ -203,10 +294,56 @@ export default function AdminDashboard() {
 
                     <div className="pt-4 flex justify-end">
                       <button type="submit" className="bg-brand-red hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold transition-all flex items-center gap-2">
-                        <Save size={18} /> 설정 저장
+                        <Save size={20} /> 설정 저장
                       </button>
                     </div>
                   </form>
+                </motion.div>
+              )}
+
+              {activeTab === 'news' && (
+                <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+                  <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+                    <Newspaper className="text-brand-red" /> 사내 뉴스 관리
+                  </h2>
+                  <div className="flex justify-end mb-6">
+                    <button 
+                      onClick={() => setEditingItem({ type: 'news', id: 'new', title: '', date: new Date().toISOString().split('T')[0], content: '', imageUrl: '' })}
+                      className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-2"
+                    >
+                      <Plus size={20} /> 새 뉴스글 추가
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {news.map((item) => (
+                      <div key={item.id} className="bg-neutral-900 border border-white/5 p-6 rounded-xl flex items-start justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                          {item.imageUrl && (
+                            <img src={item.imageUrl} alt={item.title} className="w-16 h-16 object-cover rounded shadow-lg bg-white/10" />
+                          )}
+                          <div>
+                            <h3 className="font-bold text-white text-lg">{item.title}</h3>
+                            <p className="text-sm text-neutral-400 mt-1 mb-2 font-mono">{item.date}</p>
+                            <p className="text-sm text-neutral-500 line-clamp-2">{item.content}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button 
+                            onClick={() => setEditingItem({ type: 'news', ...item })}
+                            className="p-2 text-neutral-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button 
+                            onClick={() => deleteNews(item.id)}
+                            className="p-2 text-red-400 hover:text-red-300 bg-red-400/10 hover:bg-red-400/20 rounded-lg transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               )}
 
@@ -320,9 +457,13 @@ export default function AdminDashboard() {
                     else updateProduct(editingItem.id || editingItem.data?.id, productData);
                     showToast(editingItem.mode === 'add' ? '제품이 추가되었습니다.' : '제품이 수정되었습니다.');
                   } else if (editingItem.type === 'partner') {
-                    if (editingItem.mode === 'add') addPartner(data as any);
+                    if (editingItem.mode === 'add' || editingItem.id === 'new') addPartner(data as any);
                     else updatePartner(editingItem.id || editingItem.data?.id, data as any);
-                    showToast(editingItem.mode === 'add' ? '파트너가 추가되었습니다.' : '파트너가 수정되었습니다.');
+                    showToast(editingItem.mode === 'add' || editingItem.id === 'new' ? '파트너가 추가되었습니다.' : '파트너가 수정되었습니다.');
+                  } else if (editingItem.type === 'news') {
+                    if (editingItem.id === 'new') addNews(data as any);
+                    else updateNews(editingItem.id, data as any);
+                    showToast(editingItem.id === 'new' ? '사내 뉴스가 추가되었습니다.' : '사내 뉴스가 수정되었습니다.');
                   }
                   setEditingItem(null);
                 }}
@@ -347,6 +488,13 @@ export default function AdminDashboard() {
                       defaultValue={(editingItem.gallery || editingItem.data?.gallery || []).join(', ')} 
                       isTextArea 
                     />
+                  </>
+                ) : editingItem.type === 'news' ? (
+                  <>
+                    <InputField label="제목" name="title" defaultValue={editingItem.title} />
+                    <InputField label="작성일 (YYYY.MM.DD 형식 권장, 현재날짜 기본값)" name="date" defaultValue={editingItem.date} />
+                    <InputField label="내용" name="content" defaultValue={editingItem.content} isTextArea />
+                    <ImageUploadField label="첨부 이미지 (선택)" name="imageUrl" defaultValue={editingItem.imageUrl} />
                   </>
                 ) : (
                   <>
@@ -378,6 +526,44 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
       {icon}
       <span className="font-medium">{label}</span>
     </button>
+  );
+}
+
+function ImageUploadField({ label, name, defaultValue }: { label: string, name: string, defaultValue?: string }) {
+  const [preview, setPreview] = useState<string | null>(defaultValue || null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div>
+      <label className="block text-sm text-neutral-400 mb-1">{label}</label>
+      <div className="flex flex-col gap-3">
+        {preview && (
+          <img src={preview} alt="Preview" className="w-full max-h-48 object-cover rounded-xl border border-white/10" />
+        )}
+        <input type="hidden" name={name} value={preview || ''} />
+        <input 
+          type="file" 
+          accept="image/*"
+          onChange={handleFileChange}
+          className="w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white/10 file:text-white hover:file:bg-white/20 transition-all cursor-pointer"
+        />
+        {preview && (
+          <button type="button" onClick={() => setPreview(null)} className="text-sm text-red-400 text-left hover:text-red-300">
+            이미지 삭제
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
