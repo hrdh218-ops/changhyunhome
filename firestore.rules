@@ -25,8 +25,8 @@ service cloud.firestore {
       return data.keys().hasAny(['category', 'name', 'description', 'image'])
         && data.category is string && data.category.size() > 0 && data.category.size() <= 64
         && data.name is string && data.name.size() > 0 && data.name.size() <= 128
-        && data.description is string && data.description.size() <= 2048
-        && data.image is string && data.image.size() > 0 && data.image.size() <= 1024
+        && data.description is string && data.description.size() <= 50000
+        && data.image is string && data.image.size() > 0 && data.image.size() <= 1048576
         && (!('inkType' in data) || (data.inkType is string && data.inkType.size() <= 64))
         && (!('uvType' in data) || (data.uvType is string && data.uvType.size() <= 64))
         && (!('mediaType' in data) || (data.mediaType is string && data.mediaType.size() <= 64))
@@ -50,8 +50,8 @@ service cloud.firestore {
     function isValidPartner(data) {
       return data.keys().hasAny(['name', 'logo'])
         && data.name is string && data.name.size() > 0 && data.name.size() <= 128
-        && data.logo is string && data.logo.size() > 0 && data.logo.size() <= 1024
-        && (!('url' in data) || (data.url is string && data.url.size() <= 1024));
+        && data.logo is string && data.logo.size() > 0 && data.logo.size() <= 1048576
+        && (!('url' in data) || (data.url is string && data.url.size() <= 1048576));
     }
 
     match /partners/{partnerId} {
@@ -70,8 +70,8 @@ service cloud.firestore {
       return data.keys().hasAny(['title', 'date', 'content'])
         && data.title is string && data.title.size() > 0 && data.title.size() <= 256
         && data.date is string && data.date.size() > 0 && data.date.size() <= 64
-        && data.content is string && data.content.size() <= 10000
-        && (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1024))
+        && data.content is string && data.content.size() <= 500000
+        && (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1048576))
         && (!('isPopup' in data) || data.isPopup is bool);
     }
 
@@ -90,23 +90,23 @@ service cloud.firestore {
     function isValidSettings(data) {
       return data.keys().hasAny(['companyName', 'logo', 'heroTitle', 'heroSubtitle', 'pointColor', 'aboutTitle', 'aboutVision', 'aboutImage'])
         && data.companyName is string && data.companyName.size() <= 128
-        && data.logo is string && data.logo.size() <= 1024
+        && data.logo is string && data.logo.size() <= 1048576
         && (!('invertLogo' in data) || data.invertLogo is bool)
         && data.heroTitle is string && data.heroTitle.size() <= 256
-        && data.heroSubtitle is string && data.heroSubtitle.size() <= 512
+        && data.heroSubtitle is string && data.heroSubtitle.size() <= 50000
         && data.pointColor is string && data.pointColor.size() <= 32
         && data.aboutTitle is string && data.aboutTitle.size() <= 256
-        && (!('aboutSubtitle' in data) || (data.aboutSubtitle is string && data.aboutSubtitle.size() <= 512))
-        && data.aboutVision is string && data.aboutVision.size() <= 2048
-        && data.aboutImage is string && data.aboutImage.size() <= 1024
+        && (!('aboutSubtitle' in data) || (data.aboutSubtitle is string && data.aboutSubtitle.size() <= 50000))
+        && data.aboutVision is string && data.aboutVision.size() <= 50000
+        && data.aboutImage is string && data.aboutImage.size() <= 1048576
         && (!('contactEmail' in data) || (data.contactEmail is string && data.contactEmail.size() <= 128))
         && (!('contactPhone' in data) || (data.contactPhone is string && data.contactPhone.size() <= 64))
         && (!('contactAddress' in data) || (data.contactAddress is string && data.contactAddress.size() <= 512))
         && (!('popupBannerEnabled' in data) || data.popupBannerEnabled is bool)
-        && (!('popupBannerImageUrl' in data) || (data.popupBannerImageUrl is string && data.popupBannerImageUrl.size() <= 1024))
-        && (!('popupBannerLinkUrl' in data) || (data.popupBannerLinkUrl is string && data.popupBannerLinkUrl.size() <= 1024))
+        && (!('popupBannerImageUrl' in data) || (data.popupBannerImageUrl is string && data.popupBannerImageUrl.size() <= 1048576))
+        && (!('popupBannerLinkUrl' in data) || (data.popupBannerLinkUrl is string && data.popupBannerLinkUrl.size() <= 1048576))
         && (!('popupNewsId' in data) || (data.popupNewsId is string && data.popupNewsId.size() <= 128))
-        && (!('youtubeVideoUrl' in data) || (data.youtubeVideoUrl is string && data.youtubeVideoUrl.size() <= 1024));
+        && (!('youtubeVideoUrl' in data) || (data.youtubeVideoUrl is string && data.youtubeVideoUrl.size() <= 1048576));
     }
 
     match /settings/{documentId} {
