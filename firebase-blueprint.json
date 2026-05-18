@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Product catalog items",
+      "type": "object",
+      "properties": {
+        "category": { "type": "string", "enum": ["System", "Media", "Others"] },
+        "inkType": { "type": "string", "enum": ["Solvent", "UV", "Waterbase"] },
+        "uvType": { "type": "string", "enum": ["Roll", "Flatbed"] },
+        "mediaType": { "type": "string", "enum": ["PVC", "PET", "PP", "TEXTILE", "FLEX"] },
+        "otherType": { "type": "string", "enum": ["Ink", "Stand", "Subsidiary"] },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "gallery": { "type": "array" },
+        "order": { "type": "number", "description": "Used to maintain product display order" }
+      },
+      "required": ["category", "name", "description", "image"]
+    },
+    "Partner": {
+      "title": "Partner",
+      "description": "Partner companies",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "logo": { "type": "string" },
+        "url": { "type": "string" }
+      },
+      "required": ["name", "logo"]
+    },
+    "News": {
+      "title": "News",
+      "description": "Company news and announcements",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "content": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "isPopup": { "type": "boolean" }
+      },
+      "required": ["title", "date", "content"]
+    },
+    "SiteSettings": {
+      "title": "Settings",
+      "description": "Global website settings",
+      "type": "object",
+      "properties": {
+        "companyName": { "type": "string" },
+        "logo": { "type": "string" },
+        "invertLogo": { "type": "boolean" },
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "pointColor": { "type": "string" },
+        "aboutTitle": { "type": "string" },
+        "aboutSubtitle": { "type": "string" },
+        "aboutVision": { "type": "string" },
+        "aboutImage": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "contactAddress": { "type": "string" },
+        "popupBannerEnabled": { "type": "boolean" },
+        "popupBannerImageUrl": { "type": "string" },
+        "popupBannerLinkUrl": { "type": "string" },
+        "popupNewsId": { "type": "string" },
+        "youtubeVideoUrl": { "type": "string" }
+      },
+      "required": ["companyName", "logo", "heroTitle", "heroSubtitle", "pointColor", "aboutTitle", "aboutVision", "aboutImage"]
+    }
+  },
+  "firestore": {
+    "products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Collection of products"
+    },
+    "partners/{partnerId}": {
+      "schema": { "$ref": "#/entities/Partner" },
+      "description": "Collection of partners"
+    },
+    "news/{newsId}": {
+      "schema": { "$ref": "#/entities/News" },
+      "description": "Collection of news stories"
+    },
+    "settings/{documentId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Global site settings, usually just one document named 'global'"
+    }
+  }
+}

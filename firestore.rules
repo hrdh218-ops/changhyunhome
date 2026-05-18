@@ -1,0 +1,119 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.email == "hrdh218@gmail.com";
+    }
+    
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    // -- Product Validation --
+    function isValidProduct(data) {
+      return data.keys().hasAny(['category', 'name', 'description', 'image'])
+        && data.category is string && data.category.size() > 0 && data.category.size() <= 64
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 128
+        && data.description is string && data.description.size() <= 2048
+        && data.image is string && data.image.size() > 0 && data.image.size() <= 1024
+        && (!('inkType' in data) || (data.inkType is string && data.inkType.size() <= 64))
+        && (!('uvType' in data) || (data.uvType is string && data.uvType.size() <= 64))
+        && (!('mediaType' in data) || (data.mediaType is string && data.mediaType.size() <= 64))
+        && (!('otherType' in data) || (data.otherType is string && data.otherType.size() <= 64))
+        && (!('gallery' in data) || (data.gallery is list && data.gallery.size() <= 20))
+        && (!('order' in data) || data.order is number);
+    }
+
+    match /products/{productId} {
+      // Anyone can read products
+      allow read: if true;
+      
+      allow create: if isAdmin() && isValidProduct(incoming());
+      
+      allow update: if isAdmin() && isValidId(productId) && isValidProduct(incoming());
+      
+      allow delete: if isAdmin() && isValidId(productId);
+    }
+
+    // -- Partner Validation --
+    function isValidPartner(data) {
+      return data.keys().hasAny(['name', 'logo'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 128
+        && data.logo is string && data.logo.size() > 0 && data.logo.size() <= 1024
+        && (!('url' in data) || (data.url is string && data.url.size() <= 1024));
+    }
+
+    match /partners/{partnerId} {
+      // Anyone can read partners
+      allow read: if true;
+      
+      allow create: if isAdmin() && isValidPartner(incoming());
+      
+      allow update: if isAdmin() && isValidId(partnerId) && isValidPartner(incoming());
+      
+      allow delete: if isAdmin() && isValidId(partnerId);
+    }
+
+    // -- News Validation --
+    function isValidNews(data) {
+      return data.keys().hasAny(['title', 'date', 'content'])
+        && data.title is string && data.title.size() > 0 && data.title.size() <= 256
+        && data.date is string && data.date.size() > 0 && data.date.size() <= 64
+        && data.content is string && data.content.size() <= 10000
+        && (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 1024))
+        && (!('isPopup' in data) || data.isPopup is bool);
+    }
+
+    match /news/{newsId} {
+      // Anyone can read news
+      allow read: if true;
+      
+      allow create: if isAdmin() && isValidNews(incoming());
+      
+      allow update: if isAdmin() && isValidId(newsId) && isValidNews(incoming());
+      
+      allow delete: if isAdmin() && isValidId(newsId);
+    }
+
+    // -- Settings Validation --
+    function isValidSettings(data) {
+      return data.keys().hasAny(['companyName', 'logo', 'heroTitle', 'heroSubtitle', 'pointColor', 'aboutTitle', 'aboutVision', 'aboutImage'])
+        && data.companyName is string && data.companyName.size() <= 128
+        && data.logo is string && data.logo.size() <= 1024
+        && (!('invertLogo' in data) || data.invertLogo is bool)
+        && data.heroTitle is string && data.heroTitle.size() <= 256
+        && data.heroSubtitle is string && data.heroSubtitle.size() <= 512
+        && data.pointColor is string && data.pointColor.size() <= 32
+        && data.aboutTitle is string && data.aboutTitle.size() <= 256
+        && (!('aboutSubtitle' in data) || (data.aboutSubtitle is string && data.aboutSubtitle.size() <= 512))
+        && data.aboutVision is string && data.aboutVision.size() <= 2048
+        && data.aboutImage is string && data.aboutImage.size() <= 1024
+        && (!('contactEmail' in data) || (data.contactEmail is string && data.contactEmail.size() <= 128))
+        && (!('contactPhone' in data) || (data.contactPhone is string && data.contactPhone.size() <= 64))
+        && (!('contactAddress' in data) || (data.contactAddress is string && data.contactAddress.size() <= 512))
+        && (!('popupBannerEnabled' in data) || data.popupBannerEnabled is bool)
+        && (!('popupBannerImageUrl' in data) || (data.popupBannerImageUrl is string && data.popupBannerImageUrl.size() <= 1024))
+        && (!('popupBannerLinkUrl' in data) || (data.popupBannerLinkUrl is string && data.popupBannerLinkUrl.size() <= 1024))
+        && (!('popupNewsId' in data) || (data.popupNewsId is string && data.popupNewsId.size() <= 128))
+        && (!('youtubeVideoUrl' in data) || (data.youtubeVideoUrl is string && data.youtubeVideoUrl.size() <= 1024));
+    }
+
+    match /settings/{documentId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidSettings(incoming());
+      allow update: if isAdmin() && isValidId(documentId) && isValidSettings(incoming());
+      allow delete: if isAdmin() && isValidId(documentId);
+    }
+  }
+}

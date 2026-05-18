@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { bootstrapFirestore } from '../lib/bootstrap';
 
 export interface Product {
   id: string;
@@ -56,6 +59,7 @@ export interface SiteSettings {
   popupBannerImageUrl: string;
   popupBannerLinkUrl: string;
   popupNewsId?: string;
+  youtubeVideoUrl: string;
 }
 
 interface SiteContextType {
@@ -814,59 +818,8 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     popupBannerImageUrl: '',
     popupBannerLinkUrl: '',
     popupNewsId: '1',
+    youtubeVideoUrl: 'https://www.youtube.com/embed/2MQl9-vb8jU',
   });
-
-  const updateSettings = (newSettings: Partial<SiteSettings>) => {
-    setSettings(prev => ({ ...prev, ...newSettings }));
-  };
-
-  const addProduct = (product: Omit<Product, 'id'>) => {
-    setProducts(prev => [...prev, { ...product, id: Date.now().toString() }]);
-  };
-
-  const updateProduct = (id: string, product: Partial<Product>) => {
-    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...product } : p));
-  };
-
-  const deleteProduct = (id: string) => {
-    setProducts(prev => prev.filter(p => p.id !== id));
-  };
-
-  const moveProductUp = (id: string) => {
-    setProducts(prev => {
-      const index = prev.findIndex(p => p.id === id);
-      if (index <= 0) return prev;
-      const newProducts = [...prev];
-      const temp = newProducts[index - 1];
-      newProducts[index - 1] = newProducts[index];
-      newProducts[index] = temp;
-      return newProducts;
-    });
-  };
-
-  const moveProductDown = (id: string) => {
-    setProducts(prev => {
-      const index = prev.findIndex(p => p.id === id);
-      if (index === -1 || index >= prev.length - 1) return prev;
-      const newProducts = [...prev];
-      const temp = newProducts[index + 1];
-      newProducts[index + 1] = newProducts[index];
-      newProducts[index] = temp;
-      return newProducts;
-    });
-  };
-
-  const addPartner = (partner: Omit<Partner, 'id'>) => {
-    setPartners(prev => [...prev, { ...partner, id: Date.now().toString() }]);
-  };
-
-  const updatePartner = (id: string, partner: Partial<Partner>) => {
-    setPartners(prev => prev.map(p => p.id === id ? { ...p, ...partner } : p));
-  };
-
-  const deletePartner = (id: string) => {
-    setPartners(prev => prev.filter(p => p.id !== id));
-  };
 
   const [news, setNews] = useState<News[]>([
     {
@@ -879,16 +832,155 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   ]);
 
-  const addNews = (newsItem: Omit<News, 'id'>) => {
-    setNews(prev => [{ ...newsItem, id: Date.now().toString() }, ...prev]);
+  useEffect(() => {
+    let unsubProducts: (() => void) | undefined;
+    let unsubPartners: (() => void) | undefined;
+    let unsubNews: (() => void) | undefined;
+    let unsubSettings: (() => void) | undefined;
+
+    bootstrapFirestore(products, partners, news, settings).then(() => {
+      unsubProducts = onSnapshot(collection(db, 'products'), (snapshot) => {
+        const items: Product[] = [];
+        snapshot.forEach(d => items.push({ id: d.id, ...d.data() } as Product));
+        setProducts(items.sort((a, b) => ((a as any).order || 0) - ((b as any).order || 0)));
+      }, (error) => handleFirestoreError(error, OperationType.LIST, 'products'));
+
+      unsubPartners = onSnapshot(collection(db, 'partners'), (snapshot) => {
+        const items: Partner[] = [];
+        snapshot.forEach(d => items.push({ id: d.id, ...d.data() } as Partner));
+        setPartners(items);
+      }, (error) => handleFirestoreError(error, OperationType.LIST, 'partners'));
+
+      unsubNews = onSnapshot(collection(db, 'news'), (snapshot) => {
+        const items: News[] = [];
+        snapshot.forEach(d => items.push({ id: d.id, ...d.data() } as News));
+        setNews(items.sort((a, b) => a.date > b.date ? -1 : 1));
+      }, (error) => handleFirestoreError(error, OperationType.LIST, 'news'));
+
+      unsubSettings = onSnapshot(doc(db, 'settings', 'global'), (docSn) => {
+        if (docSn.exists()) {
+          setSettings(docSn.data() as SiteSettings);
+        }
+      }, (error) => handleFirestoreError(error, OperationType.GET, 'settings/global'));
+
+    }).catch(console.error);
+
+    return () => {
+      if (unsubProducts) unsubProducts();
+      if (unsubPartners) unsubPartners();
+      if (unsubNews) unsubNews();
+      if (unsubSettings) unsubSettings();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const updateSettings = async (newSettings: Partial<SiteSettings>) => {
+    try {
+      await updateDoc(doc(db, 'settings', 'global'), newSettings);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, 'settings/global');
+    }
   };
 
-  const updateNews = (id: string, newsItem: Partial<News>) => {
-    setNews(prev => prev.map(n => n.id === id ? { ...n, ...newsItem } : n));
+  const addProduct = async (product: Omit<Product, 'id'>) => {
+    const id = Date.now().toString();
+    try {
+      await setDoc(doc(db, 'products', id), { ...product, order: products.length });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.CREATE, `products/${id}`);
+    }
   };
 
-  const deleteNews = (id: string) => {
-    setNews(prev => prev.filter(n => n.id !== id));
+  const updateProduct = async (id: string, product: Partial<Product>) => {
+    try {
+      await updateDoc(doc(db, 'products', id), product);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, `products/${id}`);
+    }
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'products', id));
+    } catch (e) {
+      handleFirestoreError(e, OperationType.DELETE, `products/${id}`);
+    }
+  };
+
+  const moveProductUp = async (id: string) => {
+    const index = products.findIndex(p => p.id === id);
+    if (index <= 0) return;
+    const p1 = products[index] as any;
+    const p2 = products[index - 1] as any;
+    try {
+      await updateDoc(doc(db, 'products', p1.id), { order: p1.order !== undefined ? p1.order - 1 : index - 1 });
+      await updateDoc(doc(db, 'products', p2.id), { order: p2.order !== undefined ? p2.order + 1 : index });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, `products`);
+    }
+  };
+
+  const moveProductDown = async (id: string) => {
+    const index = products.findIndex(p => p.id === id);
+    if (index === -1 || index >= products.length - 1) return;
+    const p1 = products[index] as any;
+    const p2 = products[index + 1] as any;
+    try {
+      await updateDoc(doc(db, 'products', p1.id), { order: p1.order !== undefined ? p1.order + 1 : index + 1 });
+      await updateDoc(doc(db, 'products', p2.id), { order: p2.order !== undefined ? p2.order - 1 : index });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, `products`);
+    }
+  };
+
+  const addPartner = async (partner: Omit<Partner, 'id'>) => {
+    const id = Date.now().toString();
+    try {
+      await setDoc(doc(db, 'partners', id), partner);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.CREATE, `partners/${id}`);
+    }
+  };
+
+  const updatePartner = async (id: string, partner: Partial<Partner>) => {
+    try {
+      await updateDoc(doc(db, 'partners', id), partner);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, `partners/${id}`);
+    }
+  };
+
+  const deletePartner = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'partners', id));
+    } catch (e) {
+      handleFirestoreError(e, OperationType.DELETE, `partners/${id}`);
+    }
+  };
+
+  const addNews = async (newsItem: Omit<News, 'id'>) => {
+    const id = Date.now().toString();
+    try {
+      await setDoc(doc(db, 'news', id), newsItem);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.CREATE, `news/${id}`);
+    }
+  };
+
+  const updateNews = async (id: string, newsItem: Partial<News>) => {
+    try {
+      await updateDoc(doc(db, 'news', id), newsItem);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.UPDATE, `news/${id}`);
+    }
+  };
+
+  const deleteNews = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'news', id));
+    } catch (e) {
+      handleFirestoreError(e, OperationType.DELETE, `news/${id}`);
+    }
   };
 
   return (
