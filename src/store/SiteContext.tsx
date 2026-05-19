@@ -151,7 +151,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { label: '인쇄 속도', value: '최대 122㎡/h' },
         { label: '프린트헤드', value: 'PrecisionCore MicroTFP Head' },
         { label: '최대 해상도', value: '2,400 x 1,200 dpi' },
-        { label: '잉크타입', value: 'Epson UltraChrome Pro12 잉크' },
+        { label: '잉크타입', value: 'CMYK + LC, VLM + GY, LGY + O, G, V + PK, MK' },
         { label: '최대 인쇄폭', value: '64인치 (1,624mm)' },
         { label: '크기', value: '2,740 x 760 x 1,145 mm' },
         { label: '무게', value: '약 224 kg' }
@@ -207,7 +207,7 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
         { label: '인쇄 속도', value: '최대 40㎡/h' },
         { label: '프린트헤드', value: 'PrecisionCore MicroTFP x 8' },
         { label: '최대 해상도', value: '720 x 1440 dpi' },
-        { label: '잉크타입', value: 'Epson UltraChrome UV ink' },
+        { label: '잉크타입', value: 'C, M, Y, K, Lc, Lm, Gy, R, Wh, Vr' },
         { label: '최대 인쇄폭', value: '2,500 x 1,250 mm' },
         { label: '크기', value: '4,635 x 2,768 x 1,730 mm' },
         { label: '무게', value: '약 1,370 kg' }

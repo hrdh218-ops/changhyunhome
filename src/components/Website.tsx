@@ -13,6 +13,7 @@ export default function Website({ path }: { path: string }) {
   const [activeCategory, setActiveCategory] = useState<'System' | 'Media' | 'Others'>('System');
   const [showPromoPopup, setShowPromoPopup] = useState(false);
   const [latestVideoEmbed, setLatestVideoEmbed] = useState<string>('');
+  const [showPreparing, setShowPreparing] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -102,7 +103,7 @@ export default function Website({ path }: { path: string }) {
               />
             </div>
             <div className="hidden md:flex items-center gap-3 border-l border-neutral-200 pl-6">
-              <SocialLink icon={<Instagram size={18} />} href="#" header />
+              <SocialLink icon={<Instagram size={18} />} href="#" header onClick={(e) => { e.preventDefault(); setShowPreparing(true); }} />
               <SocialLink icon={<Youtube size={18} />} href="https://www.youtube.com/@changhyun-biz" header />
               <button 
                 onClick={() => navigate('/news')}
@@ -626,6 +627,45 @@ export default function Website({ path }: { path: string }) {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Preparing Modal */}
+      <AnimatePresence>
+        {showPreparing && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowPreparing(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full z-10 bg-brand-black border border-white/10 p-8 text-center"
+            >
+              <button
+                onClick={() => setShowPreparing(false)}
+                className="absolute top-3 right-3 p-2 text-neutral-400 hover:text-white rounded-full transition-colors z-20"
+              >
+                <X size={18} />
+              </button>
+              <div className="w-16 h-16 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-4 text-neutral-400">
+                <Instagram size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">현재 준비중입니다.</h3>
+              <p className="text-neutral-400 text-sm mb-6">새로운 모습으로 곧 찾아뵙겠습니다.</p>
+              <button
+                onClick={() => setShowPreparing(false)}
+                className="bg-brand-red text-white w-full py-3 rounded-xl font-bold hover:bg-red-700 transition-colors"
+              >
+                확인
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -676,9 +716,15 @@ function ContactInfoSmall({ icon, value }: { icon: React.ReactNode, value: strin
   );
 }
 
-function SocialLink({ icon, href, header }: { icon: React.ReactNode, href: string, header?: boolean }) {
+function SocialLink({ icon, href, header, onClick }: { icon: React.ReactNode, href: string, header?: boolean, onClick?: (e: React.MouseEvent) => void }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${header ? 'bg-neutral-100 hover:bg-brand-red text-neutral-600 hover:text-white' : 'bg-white/5 hover:bg-brand-red text-neutral-400 hover:text-white'}`}>
+    <a 
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      onClick={onClick}
+      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${header ? 'bg-neutral-100 hover:bg-brand-red text-neutral-600 hover:text-white' : 'bg-white/5 hover:bg-brand-red text-neutral-400 hover:text-white'}`}
+    >
       {icon}
     </a>
   );
