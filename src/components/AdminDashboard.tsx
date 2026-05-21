@@ -280,6 +280,7 @@ export default function AdminDashboard() {
                           className="w-full bg-neutral-900 border border-white/20 rounded-lg p-3 text-white focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition-all appearance-none"
                         >
                           <option value="">직접 이미지 등록하기 (글 선택 안함)</option>
+                          <option value="LATEST">가장 최신 사내 뉴스 첫번째 글 자동 표시 (추천)</option>
                           {news.map(n => (
                             <option key={n.id} value={n.id}>{n.title}</option>
                           ))}

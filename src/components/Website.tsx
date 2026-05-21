@@ -31,12 +31,22 @@ export default function Website({ path }: { path: string }) {
     } else if (urlOrId) {
       let embedUrl = urlOrId;
       try {
-        if (urlOrId.includes('watch?v=')) {
-          const videoId = new URL(urlOrId).searchParams.get('v');
-          if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        } else if (urlOrId.includes('youtu.be/')) {
-          const videoId = urlOrId.split('youtu.be/')[1].split('?')[0];
-          if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        if (urlOrId.includes('<iframe') && urlOrId.includes('src=')) {
+          const srcMatch = urlOrId.match(/src="([^"]+)"/);
+          if (srcMatch && srcMatch[1]) {
+            embedUrl = srcMatch[1];
+          }
+        } else {
+          // Extract video ID using regex for all common youtube formats
+          const match = urlOrId.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\n]+)/);
+          if (match && match[1]) {
+            embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+          } else if (urlOrId.startsWith('http') && urlOrId.includes('embed')) {
+            embedUrl = urlOrId;
+          } else if (!urlOrId.includes('/') && !urlOrId.includes(' ')) {
+            // Probably just a video ID
+            embedUrl = `https://www.youtube.com/embed/${urlOrId}`;
+          }
         }
       } catch (e) {
         console.error('Invalid URL:', e);
@@ -534,7 +544,9 @@ export default function Website({ path }: { path: string }) {
               onClick={handleClosePopup}
             />
             {(() => {
-              const popupNews = settings.popupNewsId ? news.find(n => n.id === settings.popupNewsId) : null;
+              const popupNews = settings.popupNewsId === 'LATEST' && news.length > 0 
+                ? news[0] 
+                : (settings.popupNewsId && settings.popupNewsId !== 'LATEST' ? news.find(n => n.id === settings.popupNewsId) : null);
               
               if (popupNews) {
                 return (
