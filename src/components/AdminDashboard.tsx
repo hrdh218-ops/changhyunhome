@@ -17,11 +17,15 @@ export default function AdminDashboard() {
   const [loginError, setLoginError] = useState<boolean | string>(false);
 
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setIsAuthenticated(true);
-        if (user.email !== 'hrdh218@gmail.com') {
-          showToast('해당 계정은 관리자 권한이 없을 수 있습니다. (hrdh218@gmail.com 아님)');
+        if (user.email === 'hrdh218@gmail.com') {
+          setIsAuthenticated(true);
+          setLoginError(false);
+        } else {
+          await signOut(auth);
+          setIsAuthenticated(false);
+          setLoginError('관리자 권한이 없습니다. 등록된 관리자 계정으로만 접근할 수 있습니다.');
         }
       } else {
         setIsAuthenticated(false);
@@ -33,9 +37,14 @@ export default function AdminDashboard() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result.user?.email !== 'hrdh218@gmail.com') {
+        await signOut(auth);
+        setLoginError('관리자 권한이 없습니다. 등록된 관리자 계정으로만 접근할 수 있습니다.');
+        return;
+      }
       setLoginError(false);
-      window.location.reload();
+      // Let onAuthStateChanged handle the authenticated state, no need to reload
     } catch (err: any) {
       console.error(err);
       if (err.code === 'auth/unauthorized-domain') {
