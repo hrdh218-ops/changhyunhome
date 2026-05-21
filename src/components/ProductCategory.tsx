@@ -5,16 +5,37 @@ import { ArrowRight, ChevronLeft } from 'lucide-react';
 
 export default function ProductCategory({ category }: { category: 'System' | 'Media' | 'Others' }) {
   const { products } = useSite();
-  const [activeBrand, setActiveBrand] = useState<'EPSON' | 'ROLAND' | 'OTHERS'>('EPSON');
-  const [activeSubCategory, setActiveSubCategory] = useState<string>('ALL');
+  const [activeBrandState, setActiveBrandState] = useState<'EPSON' | 'ROLAND' | 'OTHERS'>(() => {
+    return (sessionStorage.getItem(`productCategory_${category}_brand`) as any) || 'EPSON';
+  });
+  const [activeSubCategoryState, setActiveSubCategoryState] = useState<string>(() => {
+    return sessionStorage.getItem(`productCategory_${category}_sub`) || (category === 'Others' ? '잉크' : 'ALL');
+  });
+  const activeBrand = activeBrandState;
+  const activeSubCategory = activeSubCategoryState;
+
+  const setActiveBrand = (brand: 'EPSON' | 'ROLAND' | 'OTHERS') => {
+    setActiveBrandState(brand);
+    sessionStorage.setItem(`productCategory_${category}_brand`, brand);
+    
+    const defaultSub = category === 'Others' ? '잉크' : 'ALL';
+    setActiveSubCategoryState(defaultSub);
+    sessionStorage.setItem(`productCategory_${category}_sub`, defaultSub);
+  };
+
+  const setActiveSubCategory = (sub: string) => {
+    setActiveSubCategoryState(sub);
+    sessionStorage.setItem(`productCategory_${category}_sub`, sub);
+  };
+
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    setActiveSubCategory(category === 'Others' ? '잉크' : 'ALL');
-  }, [activeBrand, category]);
-
-  useEffect(() => {
+    const savedBrand = (sessionStorage.getItem(`productCategory_${category}_brand`) as any) || 'EPSON';
+    const savedSub = sessionStorage.getItem(`productCategory_${category}_sub`) || (category === 'Others' ? '잉크' : 'ALL');
+    setActiveBrandState(savedBrand);
+    setActiveSubCategoryState(savedSub);
     window.scrollTo(0, 0);
   }, [category]);
 
@@ -334,15 +355,14 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                       <div 
                         className="w-full md:w-48 h-32 shrink-0 overflow-hidden bg-white/5 rounded-xl relative cursor-pointer group/img"
-                        onClick={() => setExpandedProductId(expandedProductId === product.id ? null : product.id)}
+                        onClick={() => {
+                          setExpandedProductId(expandedProductId === product.id ? null : product.id);
+                        }}
                       >
                         <img 
                           src={product.image} 
                           alt={product.name} 
                           className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700"
-                          onError={(e) => {
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=2071';
-                          }}
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                           <span className="text-white text-xs font-bold px-3 py-1.5 bg-brand-red rounded-full">
@@ -380,17 +400,45 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                           exit={{ opacity: 0, height: 0, marginTop: 0 }}
                           className="flex flex-row gap-4 overflow-x-auto pb-2 snap-x custom-scrollbar"
                         >
-                          {[product.image, ...(product.gallery || [])].map((img, idx) => (
-                            <img 
-                              key={idx}
-                              src={img}
-                              alt={`${product.name} detail ${idx + 1}`}
-                              className="h-32 w-48 shrink-0 rounded-xl object-contain bg-white/5 border border-white/10 snap-start"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          ))}
+                          {(() => {
+                            let images = product.gallery || [];
+                            if (images.length === 0) {
+                              if (product.id === 'magic-fabric' || product.name === 'Magic Fabric') {
+                                images = [
+                                  '/products/media/magic-fabric-1.png',
+                                  '/products/media/magic-fabric-2.png',
+                                  '/products/media/magic-fabric-3.png',
+                                  '/products/media/magic-fabric-4.png'
+                                ];
+                              } else if (product.id === 'magic-cal-series' || product.name === 'Magic Cal Series') {
+                                images = [
+                                  '/products/media/magic-cal-1.png',
+                                  '/products/media/magic-cal-2.png'
+                                ];
+                              } else if (product.image) {
+                                images = [product.image];
+                              }
+                            }
+                            
+                            return images.length === 0 ? (
+                              <div className="w-full text-center py-6 text-neutral-500 bg-white/5 rounded-xl border border-white/10 text-sm">
+                                등록된 시공 이미지가 없습니다.
+                              </div>
+                            ) : (
+                              images.map((img, idx) => (
+                                <img 
+                                  key={idx}
+                                  src={img}
+                                  alt={`${product.name} detail ${idx + 1}`}
+                                  className="h-32 w-48 shrink-0 rounded-xl object-cover bg-white/5 border border-white/10 snap-start"
+                                  onError={(e) => {
+                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=2071';
+                                    e.currentTarget.onerror = null;
+                                  }}
+                                />
+                              ))
+                            );
+                          })()}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -399,7 +447,7 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                   <>
                     <div 
                       className="aspect-[4/3] overflow-hidden bg-white/5 relative cursor-pointer group/img"
-                      onClick={() => setExpandedProductId(expandedProductId === product.id ? null : product.id)}
+                      onClick={() => navigate(`/products/${product.id}`)}
                     >
                       <img 
                         src={product.image} 
@@ -409,11 +457,6 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                           e.currentTarget.src = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=2071';
                         }}
                       />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white text-xs font-bold px-3 py-1.5 bg-brand-red rounded-full">
-                          {expandedProductId === product.id ? '접기' : '더보기'}
-                        </span>
-                      </div>
                       <div className="absolute top-4 left-4">
                         <span className="px-3 py-1 bg-brand-black/80 backdrop-blur-md text-brand-red text-xs font-bold tracking-widest rounded-full uppercase">
                           {product.category}
@@ -429,30 +472,6 @@ export default function ProductCategory({ category }: { category: 'System' | 'Me
                         자세히 보기 <ArrowRight size={16} className="group-hover/btn:translate-x-1 text-brand-red transition-transform" />
                       </div>
                     </div>
-
-                    {/* Expanded Images for System */}
-                    <AnimatePresence>
-                      {expandedProductId === product.id && (
-                        <motion.div 
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="flex flex-row gap-4 px-8 pb-8 overflow-x-auto snap-x custom-scrollbar"
-                        >
-                          {[product.image, ...(product.gallery || [])].map((img, idx) => (
-                            <img 
-                              key={idx}
-                              src={img}
-                              alt={`${product.name} detail ${idx + 1}`}
-                              className="h-40 w-56 shrink-0 rounded-xl object-contain bg-white/5 border border-white/10 snap-start"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </>
                 )}
               </motion.div>

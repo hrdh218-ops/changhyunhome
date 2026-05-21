@@ -290,10 +290,19 @@ export default function AdminDashboard() {
 
                       <hr className="border-white/10 my-6" />
 
-                      <InputField label="팝업 이미지 URL" name="popupBannerImageUrl" defaultValue={settings.popupBannerImageUrl} placeholder="/popup-banner.png 또는 https://..." />
-                      <div className="text-xs text-neutral-400 -mt-2 mb-4">권장 이미지 비율은 1:1 또는 4:5이며, 고화질 이미지를 권장합니다.</div>
-                      
-                      <InputField label="배너 클릭 시 이동할 링크 URL" name="popupBannerLinkUrl" defaultValue={settings.popupBannerLinkUrl} placeholder="https://..." />
+                      <div className={`space-y-4 transition-opacity duration-300 relative ${settings.popupNewsId ? 'opacity-40 pointer-events-none' : ''}`}>
+                        {settings.popupNewsId && (
+                          <div className="absolute inset-0 z-10 flex text-center items-center justify-center">
+                             <div className="bg-brand-black/90 text-white font-bold px-4 py-2 border border-white/20 rounded-xl shadow-2xl backdrop-blur-sm -translate-y-4">
+                               사내 뉴스 팝업 사용 중 (이미지 팝업 무시됨)
+                             </div>
+                          </div>
+                        )}
+                        <InputField label="팝업 이미지 URL" name="popupBannerImageUrl" defaultValue={settings.popupBannerImageUrl} placeholder="/popup-banner.png 또는 https://..." />
+                        <div className="text-xs text-neutral-400 -mt-2 mb-4">권장 이미지 비율은 1:1 또는 4:5이며, 고화질 이미지를 권장합니다.</div>
+                        
+                        <InputField label="배너 클릭 시 이동할 링크 URL" name="popupBannerLinkUrl" defaultValue={settings.popupBannerLinkUrl} placeholder="https://..." />
+                      </div>
                     </div>
 
                     {!settings.popupNewsId && settings.popupBannerImageUrl && (

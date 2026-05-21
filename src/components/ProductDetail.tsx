@@ -139,40 +139,69 @@ export default function ProductDetail({ productId }: { productId: string }) {
             </motion.div>
 
             {/* Installation Images */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="flex items-center justify-center gap-4 mb-12">
-                <div className="h-[1px] w-12 bg-brand-red"></div>
-                <h3 className="text-lg md:text-3xl font-bold text-center">시공 이미지</h3>
-                <div className="h-[1px] w-12 bg-brand-red"></div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[product.image, ...(product.gallery || [])].map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className="group relative aspect-[4/3] rounded-3xl overflow-hidden bg-neutral-900 border border-white/10 cursor-pointer"
-                    onClick={() => setSelectedImage(img)}
-                  >
-                    <img 
-                      src={img}
-                      alt={`${product.name} 시공 예시 ${idx + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      onError={(e) => {
-                        e.currentTarget.parentElement!.style.display = 'none';
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="absolute bottom-4 right-4 z-20 bg-black/50 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      클릭하여 크게 보기
-                    </div>
+            {(() => {
+              let galleryImages = product.gallery || [];
+              if (galleryImages.length === 0) {
+                if (product.id === 'magic-fabric' || product.name === 'Magic Fabric') {
+                  galleryImages = [
+                    '/products/media/magic-fabric-1.png',
+                    '/products/media/magic-fabric-2.png',
+                    '/products/media/magic-fabric-3.png',
+                    '/products/media/magic-fabric-4.png'
+                  ];
+                } else if (product.id === 'magic-cal-series' || product.name === 'Magic Cal Series') {
+                  galleryImages = [
+                    '/products/media/magic-cal-1.png',
+                    '/products/media/magic-cal-2.png'
+                  ];
+                } else if (product.image) {
+                  galleryImages = [product.image];
+                }
+              }
+                
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="flex items-center justify-center gap-4 mb-12">
+                    <div className="h-[1px] w-12 bg-brand-red"></div>
+                    <h3 className="text-lg md:text-3xl font-bold text-center">시공 이미지</h3>
+                    <div className="h-[1px] w-12 bg-brand-red"></div>
                   </div>
-                ))}
-              </div>
-            </motion.div>
+                  
+                  {galleryImages.length === 0 ? (
+                    <div className="text-center text-neutral-500 py-12 bg-white/5 rounded-3xl border border-white/10">
+                      등록된 시공 이미지가 없습니다.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {galleryImages.map((img, idx) => (
+                        <div 
+                          key={idx} 
+                          className="group relative aspect-[4/3] rounded-3xl overflow-hidden bg-neutral-900 border border-white/10 cursor-pointer"
+                          onClick={() => setSelectedImage(img)}
+                        >
+                          <img 
+                            src={img}
+                            alt={`${product.name} 시공 예시 ${idx + 1}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?auto=format&fit=crop&q=80&w=2071';
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          <div className="absolute bottom-4 right-4 z-20 bg-black/50 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                            클릭하여 크게 보기
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })()}
 
             {/* Models & Ink Types */}
             <motion.div

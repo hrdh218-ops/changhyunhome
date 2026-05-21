@@ -224,6 +224,10 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: 'Magic Cal Series',
       description: '라미네이팅 없이 완성되는 혁신적인 PVC 솔루션을 경험하세요.',
       image: '/products/media/magic-cal-series.png',
+      gallery: [
+        '/products/media/magic-cal-1.png',
+        '/products/media/magic-cal-2.png'
+      ],
       features: [
         { title: '우수한 발색력', desc: '특수 코팅 처리로 선명하고 깊이 있는 색상 표현이 가능합니다.' },
         { title: '뛰어난 내구성', desc: '외부 환경에서도 변색이 적어 장기간 유지됩니다.' },
@@ -244,6 +248,12 @@ export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: 'Magic Fabric',
       description: '최대 5M까지 가능한 다양한 규격, 구김없는 텐션, 부드러운 터치감과 선명한 발색을 경험하세요.',
       image: '/products/media/magic-fabric.png',
+      gallery: [
+        '/products/media/magic-fabric-1.png',
+        '/products/media/magic-fabric-2.png',
+        '/products/media/magic-fabric-3.png',
+        '/products/media/magic-fabric-4.png'
+      ],
       features: [
         { title: '가벼운 무게', desc: '초경량 소재로 이동 및 설치가 매우 간편합니다.' },
         { title: '조명용 최적화', desc: '빛 투과율이 뛰어나 백릿 및 라이트 박스에 최적화되어 있습니다.' },

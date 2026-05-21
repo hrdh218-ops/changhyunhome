@@ -544,64 +544,71 @@ export default function Website({ path }: { path: string }) {
               onClick={handleClosePopup}
             />
             {(() => {
-              const popupNews = settings.popupNewsId === 'LATEST' && news.length > 0 
-                ? news[0] 
-                : (settings.popupNewsId && settings.popupNewsId !== 'LATEST' ? news.find(n => n.id === settings.popupNewsId) : null);
-              
-              if (popupNews) {
-                return (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="relative rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full z-10 bg-brand-black border border-white/10"
-                  >
-                    <button
-                      onClick={handleClosePopup}
-                      className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-colors z-20"
+              if (settings.popupNewsId) {
+                const popupNews = settings.popupNewsId === 'LATEST' && news.length > 0 
+                  ? news[0] 
+                  : (settings.popupNewsId !== 'LATEST' ? news.find(n => n.id === settings.popupNewsId) : null);
+                
+                if (popupNews) {
+                  return (
+                    <motion.div
+                      key="news-popup"
+                      initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                      className="relative rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full z-10 bg-brand-black border border-white/10"
                     >
-                      <X size={18} />
-                    </button>
-                    
-                    <div className="flex flex-col max-h-[85vh]">
-                      {popupNews.imageUrl && (
-                        <div className="w-full shrink-0 relative cursor-pointer" onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}>
-                          <img src={popupNews.imageUrl} alt={popupNews.title} className="w-full aspect-[4/3] object-cover" />
-                        </div>
-                      )}
-                      <div className="p-6 md:p-8 overflow-y-auto w-full flex flex-col items-center text-center">
-                        <div className="flex items-center justify-center gap-2 text-brand-red mb-3">
-                          <Newspaper size={16} />
-                          <span className="text-xs font-bold tracking-widest">사내 주요 뉴스</span>
-                        </div>
-                        <h3 className="text-xl md:text-2xl font-black text-white mb-6 leading-tight">{popupNews.title}</h3>
-                        
-                        <div className="flex justify-center mt-2">
-                          <button 
-                            onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}
-                            className="bg-brand-red text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-red-700 transition-colors"
-                          >
-                            자세히 보기
-                          </button>
+                      <button
+                        onClick={handleClosePopup}
+                        className="absolute top-3 right-3 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full backdrop-blur-md transition-colors z-20"
+                      >
+                        <X size={18} />
+                      </button>
+                      
+                      <div className="flex flex-col max-h-[85vh]">
+                        {popupNews.imageUrl && (
+                          <div className="w-full shrink-0 relative cursor-pointer" onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}>
+                            <img src={popupNews.imageUrl} alt={popupNews.title} className="w-full aspect-[4/3] object-cover" />
+                          </div>
+                        )}
+                        <div className="p-6 md:p-8 overflow-y-auto w-full flex flex-col items-center text-center">
+                          <div className="flex items-center justify-center gap-2 text-brand-red mb-3">
+                            <Newspaper size={16} />
+                            <span className="text-xs font-bold tracking-widest">사내 주요 뉴스</span>
+                          </div>
+                          <h3 className="text-xl md:text-2xl font-black text-white mb-6 leading-tight">{popupNews.title}</h3>
+                          
+                          <div className="flex justify-center mt-2">
+                            <button 
+                              onClick={() => { handleClosePopup(); navigate(`/news/${popupNews.id}`); }}
+                              className="bg-brand-red text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-red-700 transition-colors"
+                            >
+                              자세히 보기
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="bg-white/5 p-2 flex justify-end border-t border-white/10 shrink-0">
-                      <button 
-                        onClick={handleClosePopupToday}
-                        className="text-neutral-400 hover:text-white text-xs px-4 py-2 transition-colors font-medium rounded-full hover:bg-white/10"
-                      >
-                        오늘 하루 보지 않기
-                      </button>
-                    </div>
-                  </motion.div>
-                );
+                      
+                      <div className="bg-white/5 p-2 flex justify-end border-t border-white/10 shrink-0">
+                        <button 
+                          onClick={handleClosePopupToday}
+                          className="text-neutral-400 hover:text-white text-xs px-4 py-2 transition-colors font-medium rounded-full hover:bg-white/10"
+                        >
+                          오늘 하루 보지 않기
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                }
+                
+                // If popupNewsId is set but news is missing/deleted, return null (do NOT fall back to banner)
+                return null;
               }
 
               if (settings.popupBannerImageUrl) {
                 return (
                   <motion.div
+                    key="banner-popup"
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
